@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">make-kots-great-again</string>
+    <string name="app_name">Make Kots Great Again</string>
+
+    <!--login Page-->
+    <string name="login_sign"><b>Sign In</b></string>
+    <string name="login_welcome">Hi there ! Nice to see you again</string>
+    <string name="login_email">Email</string>
+    <string name="login_email_hint">example@email.com</string>
+    <string name="login_password">Password</string>
+    <string name="login_password_hint">******</string>
+    <string name="login_or">or</string>
+    <string name="login_scan">QR Scan</string>
+
+    <!--page n°2-->
 </resources>

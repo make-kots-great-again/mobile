@@ -9,3 +9,7 @@ Target audience | IDE | Language
 ### Mocup
 
 <img src="./img/mocup.png">
+
+### Demo
+
+![](./img/demo.gif)
