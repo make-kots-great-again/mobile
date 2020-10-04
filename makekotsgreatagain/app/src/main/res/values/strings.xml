@@ -12,4 +12,7 @@
     <string name="login_scan">QR Scan</string>
 
     <!--page n°2-->
+
+    <!--page QR-->
+    <string name="qr_text"><b>Page QR</b></string>
 </resources>
