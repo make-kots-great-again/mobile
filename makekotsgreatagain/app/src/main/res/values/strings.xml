@@ -4,7 +4,7 @@
     <!--login Page-->
     <string name="login_sign"><b>Sign In</b></string>
     <string name="login_welcome">Hi there ! Nice to see you again</string>
-    <string name="login_email">Email</string>
+    <string name="login_email">Email or Username</string>
     <string name="login_email_hint">example@email.com</string>
     <string name="login_password">Password</string>
     <string name="login_password_hint">******</string>
