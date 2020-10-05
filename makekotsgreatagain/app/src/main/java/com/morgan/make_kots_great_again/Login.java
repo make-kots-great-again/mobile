@@ -2,6 +2,7 @@ package com.morgan.make_kots_great_again;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +34,7 @@ public class Login extends AppCompatActivity {
         button_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Login_Post_request(username, password, "172.18.0.3:8000");
+                Login_Post_request(username, password, "172.19.0.3:8000");
 
             }
         });
@@ -41,10 +42,25 @@ public class Login extends AppCompatActivity {
         button_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getBaseContext(), "Launching QR Scan activity...", Toast.LENGTH_SHORT);
-                toast.show();
+                launch_QR_scan_activity();
             }
         });
+    }
+    //-----------------------------------------------------------
+    // Function that destroy current activity and launch "Page2"
+    //-----------------------------------------------------------
+    public void launch_page2(){
+        Intent intent = new Intent(this, Page2.class);
+        startActivity(intent);
+        finish();// Kills curent activity
+    }
+
+    //----------------------------------------------------------------------
+    // Function that launch "Page_QR" (without destroying previous activity
+    //----------------------------------------------------------------------
+    public void launch_QR_scan_activity(){
+        Intent intent = new Intent(this, Page_Qr.class);
+        startActivity(intent);
     }
 
     //---------------------------------------------------------
@@ -63,8 +79,7 @@ public class Login extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) { //Requete Fonctionne
-                        String txt = "Welcome " + username.getText().toString();
-                        Toast.makeText(getBaseContext(), txt, Toast.LENGTH_SHORT).show();
+                        launch_page2();
 
                     }
                 }, new Response.ErrorListener() {
