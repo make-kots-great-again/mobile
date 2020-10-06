@@ -3,10 +3,10 @@
     package="com.morgan.make_kots_great_again">
 
     <uses-feature
-        android:name="android.hardware.camera"
-        android.required="true"/>
+        android:name="android.hardware.camera2"
+        android.required="false"/>
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.permission.camera.autofocus" />
+    <uses-feature android:name="android.permission.camera2.autofocus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
