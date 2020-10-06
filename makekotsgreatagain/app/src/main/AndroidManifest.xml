@@ -6,7 +6,7 @@
         android:name="android.hardware.camera"
         android.required="true"/>
     <uses-permission android:name="android.permission.CAMERA" />
-    <use-feature android:name="android.permission.camera.autofocus" />
+    <uses-feature android:name="android.permission.camera.autofocus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
