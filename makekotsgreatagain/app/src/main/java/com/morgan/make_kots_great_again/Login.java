@@ -87,6 +87,13 @@ public class Login extends AppCompatActivity {
     //---------------------------------------------------------
     // Function that takes care of sending POST request to api
     //---------------------------------------------------------
+
+    /* @param (Context) => The current context
+    *  @param (TextView) => The "username" edit zone
+    *  @param (TextView) => the "password" edit zone
+    *  @param (String) => The target IP address
+    *  @param (int) => The target port number
+    *  @return (void) => Doesn't return anything */
     private void login_post_request(final Context context, final TextView username, final TextView password, final String ip, final int port) {
 
         String url = "http://" + ip + ":" + port + "/server/api/login/";

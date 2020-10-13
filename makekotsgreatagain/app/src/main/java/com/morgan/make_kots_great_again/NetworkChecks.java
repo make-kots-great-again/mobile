@@ -8,6 +8,12 @@ import java.io.IOException;
 
 public class NetworkChecks {
 
+    //-----------------------------------------------------------------
+    // Function that checks if a host is up by sending an echo request
+    //-----------------------------------------------------------------
+
+    /* @param (String) => Takes a String reprensenting either an ip address or a host name (Eg:8.8.8.8 or google.com)
+    *  @return (Boolean) => Returns true if the specified host is up, false if it's down */
     protected boolean isHostUp(String host_or_ip){
         Runtime runtime = Runtime.getRuntime();
         try
@@ -20,6 +26,12 @@ public class NetworkChecks {
         return false;
     }
 
+    //------------------------------------------------------------------------
+    // Function that checks if the user (smartphone) is connected to internet
+    //------------------------------------------------------------------------
+
+    /* @param (Context) => Takes a context
+    *  @return (Boolean) => Returns true if the user is connected to internet, false otherwise */
     protected boolean isConnectedToInternet(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
