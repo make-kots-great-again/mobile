@@ -26,6 +26,10 @@ import org.json.JSONObject;
 public class Login extends AppCompatActivity {
 
     TextView username, password;
+    // Data needed to connect to API
+    private final String ip = "172.20.0.3";
+    private final int port = 8000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +55,13 @@ public class Login extends AppCompatActivity {
                 }
 
                 // If connection to host cannot be established
-                else if (!checkClass.isHostUp("172.18.0.3")){
-                    Log.d("TEST", Boolean.toString(checkClass.isHostUp("172.18.0.3")));
+                else if (!checkClass.isHostUp(ip)){
+                    Log.d("TEST", Boolean.toString(checkClass.isHostUp(ip)));
                     Toast.makeText(getBaseContext(), "⚠️ Error connecting to Database", Toast.LENGTH_SHORT).show();
                 }
                 // If everything is ok, connects to API and sends data
                 else {
-                    login_post_request("172.18.0.3", 8000);
+                    login_post_request();
                 }
             }
         });
@@ -90,10 +94,7 @@ public class Login extends AppCompatActivity {
     // Function that takes care of sending POST request to api
     //---------------------------------------------------------
 
-    /* @param (String) => The target IP address
-    *  @param (int) => The target port number
-    *  @return (void) => Doesn't return anything */
-    private void login_post_request(final String ip, final int port) {
+    private void login_post_request() {
 
         String url = "http://" + ip + ":" + port + "/server/api/login/";
         JSONObject object = new JSONObject();
