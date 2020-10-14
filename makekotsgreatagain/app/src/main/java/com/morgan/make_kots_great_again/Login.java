@@ -25,6 +25,8 @@ import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
+    TextView username, password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +34,8 @@ public class Login extends AppCompatActivity {
 
         final Button button_sign = findViewById(R.id.button_sign);
         final Button button_scan = findViewById(R.id.button_scan);
-        final TextView username = findViewById(R.id.edit_mail);
-        final TextView password = findViewById(R.id.edit_password);
+        username = findViewById(R.id.edit_mail);
+        password = findViewById(R.id.edit_password);
 
         final Context context = this;
 
@@ -55,7 +57,7 @@ public class Login extends AppCompatActivity {
                 }
                 // If everything is ok, connects to API and sends data
                 else {
-                    login_post_request(context, username, password, "172.18.0.3", 8000);
+                    login_post_request("172.18.0.3", 8000);
                 }
             }
         });
@@ -88,13 +90,10 @@ public class Login extends AppCompatActivity {
     // Function that takes care of sending POST request to api
     //---------------------------------------------------------
 
-    /* @param (Context) => The current context
-    *  @param (TextView) => The "username" edit zone
-    *  @param (TextView) => the "password" edit zone
-    *  @param (String) => The target IP address
+    /* @param (String) => The target IP address
     *  @param (int) => The target port number
     *  @return (void) => Doesn't return anything */
-    private void login_post_request(final Context context, final TextView username, final TextView password, final String ip, final int port) {
+    private void login_post_request(final String ip, final int port) {
 
         String url = "http://" + ip + ":" + port + "/server/api/login/";
         JSONObject object = new JSONObject();
@@ -112,12 +111,12 @@ public class Login extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "⚠️ Incorrect username or password.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "⚠️ Incorrect username or password.", Toast.LENGTH_SHORT).show();
                 username.setText("");
                 password.setText("");
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(jsonObjectRequest);
     }
 }
