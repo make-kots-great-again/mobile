@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity {
         button_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                /*
                 NetworkChecks checkClass = new NetworkChecks();
 
                 // If not connected to Internet
@@ -62,7 +62,8 @@ public class Login extends AppCompatActivity {
                 // If everything is ok, connects to API and sends data
                 else {
                     login_post_request();
-                }
+                }*/
+                launch_page2();
             }
         });
 
