@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class Page_Qr extends AppCompatActivity {
     private String url = "https://kotsapp.herokuapp.com/server/api/user/groups";
     private final OkHttpClient httpClient = new OkHttpClient();
 
+    private final String responseUnauthorized = "Unauthorized";
+
     // METHODES DE CYCLE DE VIE ANDROID
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,48 +58,62 @@ public class Page_Qr extends AppCompatActivity {
                 .setRequestedPreviewSize(640, 480)
                 .build();
 
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback()
+        {
             @Override
-            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+            public void surfaceCreated(@NonNull SurfaceHolder holder)
+            {
                 try
                 {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                    {
+                        Toast.makeText(getApplicationContext(), "The application couldn't access to your camera", Toast.LENGTH_SHORT).show();
                         // ??? TODO ??? ask to user for authorization instead of going in the phone parameters
                         launch_Login_Activity();
                         return;
                     }
 
                     cameraSource.start(holder);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height)
+            {
 
             }
 
             @Override
-            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+            public void surfaceDestroyed(@NonNull SurfaceHolder holder)
+            {
                 cameraSource.stop();
             }
         });
 
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>()
+        {
             @Override
-            public void release() {
-
+            public void release()
+            {
             }
 
             @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
+            public void receiveDetections(Detector.Detections<Barcode> detections)
+            {
                 final SparseArray<Barcode> qrCodes = detections.getDetectedItems();
 
-                if (qrCodes.size() != 0) {
-                    try {
+                if (qrCodes.size() != 0)
+                {
+                    try
+                    {
                         LoginRequest(qrCodes.valueAt(0).displayValue);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         e.printStackTrace();
                     }
                 }
@@ -104,26 +121,34 @@ public class Page_Qr extends AppCompatActivity {
         });
     }
 
-    public void LoginRequest(String token)  {
+    public void LoginRequest(String token)  throws Exception
+    {
         OkHttpClient client = new OkHttpClient();
 
-        Request request = new Request.Builder()
-                .header("Authorization", token)
-                .url(url).build();
+        final Request request = new Request.Builder().header("Authorization", token).url(url).build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new Callback()
+        {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, IOException e) //Ok
+            {
                 e.printStackTrace();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if(!response.isSuccessful()){
-                    throw new IOException("Unexpected code " + response);
-                }
-                else {
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                String responseBody = response.body().string();
+
+                System.out.println(responseBody);
+
+                if(!responseBody.equals(responseUnauthorized)) // QR Code IS OK
+                {
                     launch_page2();
+                }
+                else // QR Code IS NOT OK
+                {
+                    textView.setText("QR CODE IS WRONG");
                 }
             }
         });

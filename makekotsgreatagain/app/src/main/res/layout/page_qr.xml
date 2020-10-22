@@ -13,7 +13,7 @@
         android:layout_centerInParent="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.249"
+        app:layout_constraintVertical_bias="0.224"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
@@ -21,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:text="Focus on QR code"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="520dp" />
+        app:layout_constraintTop_toBottomOf="@+id/cameraPreview" />
 </androidx.constraintlayout.widget.ConstraintLayout>
