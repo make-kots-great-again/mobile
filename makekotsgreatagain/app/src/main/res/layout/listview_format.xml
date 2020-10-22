@@ -20,10 +20,21 @@ android:layout_height="match_parent" >
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/add_btn"
+        android:layout_toStartOf="@id/quantity"
         android:scaleType="centerCrop"
         android:src="@drawable/remove"
         android:contentDescription="Remove Item" />
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toStartOf="@id/add_btn"
+        android:gravity="center"
+        tools:ignore="RelativeOverlap,RtlSymmetry" />
 
     <ImageButton
         android:id="@+id/add_btn"
