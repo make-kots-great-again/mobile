@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,10 +25,21 @@ import org.json.JSONObject;
 public class Login extends AppCompatActivity {
 
     TextView username, password;
-    // Data needed to connect to API
-    private final String ip = "172.20.0.3";
-    private final int port = 8000;
 
+    // Data needed to connect to API (ip, port and connection type)
+    private final String ip = "172.18.0.3";
+    private final int port = 8000;
+    private final boolean connection_type_local = false; // true = Docker local server, false = website
+    private final NetworkChecks checkClass = new NetworkChecks();
+
+    // Getters for ip and port
+    public String getIp() {
+        return ip;
+    }
+
+    public String getPort() {
+        return Integer.toString(port);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +56,22 @@ public class Login extends AppCompatActivity {
         button_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                NetworkChecks checkClass = new NetworkChecks();
-
-                // If not connected to Internet
+                // Checks if the user is connected to internet
                 if (!checkClass.isConnectedToInternet(context)) {
                     Toast.makeText(getBaseContext(), "⚠️ No internet connection !", Toast.LENGTH_SHORT).show();
                 }
 
-                // If connection to host cannot be established
-                else if (!checkClass.isHostUp(ip)){
-                    Log.d("TEST", Boolean.toString(checkClass.isHostUp(ip)));
-                    Toast.makeText(getBaseContext(), "⚠️ Error connecting to Database", Toast.LENGTH_SHORT).show();
+                if (connection_type_local){
+                    // If connection to host cannot be established
+                    if (!checkClass.isHostUp(ip)){
+                        Toast.makeText(getBaseContext(), "⚠️ Error connecting to Database", Toast.LENGTH_SHORT).show();
+                    }
+                    // If everything is ok, connects to API and sends data
+                    else {
+                        login_post_request();
+                    }
                 }
-                // If everything is ok, connects to API and sends data
-                else {
+                else{
                     login_post_request();
                 }
             }
@@ -96,7 +107,7 @@ public class Login extends AppCompatActivity {
 
     private void login_post_request() {
 
-        String url = "http://" + ip + ":" + port + "/server/api/login/";
+        String url = checkClass.connection_method(connection_type_local);
         JSONObject object = new JSONObject();
         try {
             object.put("pseudo",username.getText());
