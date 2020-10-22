@@ -20,6 +20,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class Page_Qr extends AppCompatActivity {
 
     //VARIABLES
@@ -27,6 +33,9 @@ public class Page_Qr extends AppCompatActivity {
     private CameraSource cameraSource;
     private TextView textView;
     private BarcodeDetector barcodeDetector;
+
+    private String url = "https://kotsapp.herokuapp.com/server/api/user/groups";
+    private final OkHttpClient httpClient = new OkHttpClient();
 
     // METHODES DE CYCLE DE VIE ANDROID
     @Override
@@ -52,6 +61,7 @@ public class Page_Qr extends AppCompatActivity {
                 try
                 {
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        // ??? TODO ??? ask to user for authorization instead of going in the phone parameters
                         launch_Login_Activity();
                         return;
                     }
@@ -83,14 +93,37 @@ public class Page_Qr extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrCodes = detections.getDetectedItems();
 
-                if(qrCodes.size() != 0)
-                {
-                    textView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            textView.setText(qrCodes.valueAt(0).displayValue);
-                        }
-                    });
+                if (qrCodes.size() != 0) {
+                    try {
+                        LoginRequest(qrCodes.valueAt(0).displayValue);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void LoginRequest(String token)  {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(!response.isSuccessful()){
+                    throw new IOException("Unexpected code " + response);
+                }
+                else {
+                    launch_page2();
                 }
             }
         });
@@ -98,6 +131,12 @@ public class Page_Qr extends AppCompatActivity {
 
     public void launch_Login_Activity(){
         Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void launch_page2(){
+        Intent intent = new Intent(this, Page2.class);
         startActivity(intent);
         finish();
     }
