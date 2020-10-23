@@ -6,5 +6,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="spinner_style">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:popupBackground">@color/colorAccent</item>
+    </style>
 
 </resources>
