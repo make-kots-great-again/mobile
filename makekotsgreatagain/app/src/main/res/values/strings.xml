@@ -12,9 +12,10 @@
     <string name="login_scan">QR Scan</string>
 
     <!--page n°2-->
-    <string name="page2_welcome">Welcome back User ! \n \nChoose your list :</string>
+    <string name="page2_choose_list">Choose your list :</string>
     <string name="page2_new_product">New Product</string>
     <string name="page2_mode_achat">Mode Achat</string>
+    <string name="preference_file_key"></string>
 
     <!--page QR-->
     <string name="qr_text"><b>Page QR</b></string>
