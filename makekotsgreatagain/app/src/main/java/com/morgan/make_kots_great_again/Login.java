@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -131,8 +133,13 @@ public class Login extends AppCompatActivity {
                         try {
                             current_user_name = response.getJSONObject("user").getString("username");
                             current_user_token = response.getJSONObject("user").getString("token");
-                            //Log.d("TEST", getCurrent_user_name());
-                            //Log.d("TEST", getCurrent_user_token());
+
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("username", current_user_name);
+                            editor.putString("token", current_user_token);
+                            editor.commit();
+
                         } catch (JSONException ignored) { }
                         launch_page2();
                     }
