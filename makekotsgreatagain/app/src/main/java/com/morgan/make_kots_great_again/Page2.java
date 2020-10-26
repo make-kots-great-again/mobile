@@ -37,8 +37,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private ArrayAdapter<String> spinnerArrayAdapter;
     private String current_list_selected;
 
+    final ArrayList<String> lists = new ArrayList<>();
     final ArrayList<String> items = new ArrayList<>();
     final ArrayList<String> items_quantity = new ArrayList<>();
+
+    private final String get_url_route = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
 
 
     @Override
@@ -50,8 +53,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         current_user_name = pref.getString("username", null);
         current_user_token = pref.getString("token", null);
 
-        final ArrayList<String> lists = new ArrayList<>();
-
 
         spinner = findViewById(R.id.dropdown_list);
         spinner.setOnItemSelectedListener(this);
@@ -60,9 +61,12 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + current_user_name + "</span> !"));
 
+        Get_Shopping_Lists(get_url_route, lists);
         try {
-            Get_Shopping_Lists("http://172.18.0.3:8000/server/api/shoppingList/", lists);
-        } catch (Exception ignored) { }
+            TimeUnit.MILLISECONDS.sleep(500);
+            set_spinner();
+        } catch (InterruptedException ignored) { }
+
     }
 
     public void Get_Shopping_Lists(String url, final ArrayList<String> arrayList) {
@@ -91,8 +95,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                     while(iter.hasNext()){
                         String key = iter.next();
                         arrayList.add(key);
-                        spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, arrayList);
-                        spinner.setAdapter(spinnerArrayAdapter);
                     }
                 } catch (JSONException ignored) { }
             }
@@ -106,7 +108,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         current_list_selected = parent.getItemAtPosition(position).toString();
         Log.d("SPINNER",current_list_selected);
 
-        Get_Shopping_Lists_items("http://172.18.0.3:8000/server/api/shoppingList/", items, items_quantity);
+        Get_Shopping_Lists_items(get_url_route, items, items_quantity);
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_listview();
@@ -156,5 +158,9 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     }
     private void set_listview(){
         listView.setAdapter(new MyCustomAdapter(items, items_quantity, getBaseContext()));
+    }
+    private void set_spinner(){
+        spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
+        spinner.setAdapter(spinnerArrayAdapter);
     }
 }
