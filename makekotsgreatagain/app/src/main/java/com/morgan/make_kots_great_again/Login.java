@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +34,15 @@ public class Login extends AppCompatActivity {
     private final int port = 8000;
     private final boolean connection_type_local = false; // true = Docker local server, false = website
     private final NetworkChecks checkClass = new NetworkChecks();
+
+    //Info about user like username, and token to simplify GET request
+    private String current_user_name = "";
+    private String current_user_token = "";
+
+    // Getters for username and token
+    public String getCurrent_user_name() { return current_user_name; }
+
+    public String getCurrent_user_token() { return current_user_token; }
 
     // Getters for ip and port
     public String getIp() {
@@ -118,6 +130,17 @@ public class Login extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            current_user_name = response.getJSONObject("user").getString("username");
+                            current_user_token = response.getJSONObject("user").getString("token");
+
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("username", current_user_name);
+                            editor.putString("token", current_user_token);
+                            editor.commit();
+
+                        } catch (JSONException ignored) { }
                         launch_page2();
                     }
                 }, new Response.ErrorListener() {
