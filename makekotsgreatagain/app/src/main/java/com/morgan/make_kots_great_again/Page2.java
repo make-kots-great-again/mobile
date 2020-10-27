@@ -42,6 +42,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     final ArrayList<String> items_quantity = new ArrayList<>();
 
     private final String get_url_route = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
+    //private final String get_url_route = "http://172.18.0.3:8000/server/api/shoppingList/";
 
 
     @Override
@@ -52,7 +53,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         current_user_name = pref.getString("username", null);
         current_user_token = pref.getString("token", null);
-
 
         spinner = findViewById(R.id.dropdown_list);
         spinner.setOnItemSelectedListener(this);
@@ -66,7 +66,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             TimeUnit.MILLISECONDS.sleep(500);
             set_spinner();
         } catch (InterruptedException ignored) { }
-
     }
 
     public void Get_Shopping_Lists(String url, final ArrayList<String> arrayList) {
@@ -74,11 +73,9 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         final Request request = new Request.Builder().header("Authorization", current_user_token).url(url).build();
 
-        client.newCall(request).enqueue(new Callback()
-        {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) //Ok
-            {
+            public void onFailure(Call call, IOException e) {
                 Log.d("GET", "Error");
             }
 
