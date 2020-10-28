@@ -16,7 +16,13 @@ Link to Mocup (read only) => https://app.moqups.com/srj025RSEb/view/page/ae8fe8e
 
 ### Demo
 
+1. Connexion via username et mot de passe
+
 ![](./img/demo.gif)
+
+2. Connexion via code QR
+
+![](img/edwin_qr_code.gif)
 
 ---
 
