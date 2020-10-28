@@ -1,10 +1,11 @@
 package com.morgan.make_kots_great_again;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -36,9 +39,7 @@ public class Page_Qr extends AppCompatActivity {
     private TextView textView;
     private BarcodeDetector barcodeDetector;
 
-    private String url = "https://kots-app.herokuapp.com/server/api/user/groups";
-
-    private final String unauthorized = "Unauthorized";
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
 
     // ANDROIDS LIFE CYCLE METHODS
@@ -61,25 +62,23 @@ public class Page_Qr extends AppCompatActivity {
                 .build();
 
         //Setting up the SurfaceView to show what the camera sees
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback()
-        {
+        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void surfaceCreated(@NonNull SurfaceHolder holder)
-            {
+            public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 try
                 {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                    //check if camera permissions are already granted
+                    if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
                     {
-                        Toast.makeText(getApplicationContext(), "The application couldn't access to your camera", Toast.LENGTH_SHORT).show();
-                        wait(500);
-                        // ??? TODO ??? ask to user for authorization instead of going in the phone parameters
-                        launch_Login_Activity();
-                        return;
+                        cameraSource.start(holder);
                     }
-
-                    cameraSource.start(holder);
+                    else
+                    {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+                    }
                 }
-                catch (IOException | InterruptedException e)
+                catch (IOException e)
                 {
                     e.printStackTrace();
                 }
@@ -127,6 +126,19 @@ public class Page_Qr extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                restart_Activity();
+            } else {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                launch_Login_Activity();
+            }
+        }
+    }
 
     // METHODS
 
@@ -138,9 +150,10 @@ public class Page_Qr extends AppCompatActivity {
     * @params token : the content of the QR Code whose supposed to be a token
     *
     */
-    public void LoginRequest(String token)  throws Exception
+    public void LoginRequest(String token) throws Exception
     {
         OkHttpClient client = new OkHttpClient();
+        String url = "https://kotsapp.herokuapp.com/server/api/user/groups";
 
         Request request = new Request.Builder().header("Authorization", token).url(url).build();
 
@@ -179,7 +192,20 @@ public class Page_Qr extends AppCompatActivity {
     */
     public boolean isTokenWrong(String token)
     {
+        String unauthorized = "Unauthorized";
         return token.equals(unauthorized);
+    }
+
+    /*
+    * Restart the current activity
+    *
+    * Only called when the user grant the camera permission to the application
+    *
+     */
+    public void restart_Activity(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     //Launch the activity "Login" when called
