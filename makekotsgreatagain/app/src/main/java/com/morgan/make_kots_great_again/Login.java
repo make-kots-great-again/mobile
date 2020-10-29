@@ -1,11 +1,17 @@
 package com.morgan.make_kots_great_again;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -38,6 +44,8 @@ public class Login extends AppCompatActivity {
     //Info about user like username, and token to simplify GET request
     private String current_user_name = "";
     private String current_user_token = "";
+
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     // Getters for username and token
     public String getCurrent_user_name() { return current_user_name; }
@@ -90,12 +98,40 @@ public class Login extends AppCompatActivity {
         });
 
         button_scan.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                launch_QR_scan_activity();
+                if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+                {
+                    launch_QR_scan_activity();
+                }
+                else
+                {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+                }
             }
         });
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_REQUEST_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                launch_QR_scan_activity();
+            }
+            else
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     //-----------------------------------------------------------
     // Function that destroy current activity and launch "Page2"
     //-----------------------------------------------------------

@@ -37,9 +37,6 @@ public class Page_Qr extends AppCompatActivity {
     private TextView textView;
     private BarcodeDetector barcodeDetector;
 
-    private static final int MY_CAMERA_REQUEST_CODE = 100;
-
-
     // ANDROIDS LIFE CYCLE METHODS
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,13 +67,10 @@ public class Page_Qr extends AppCompatActivity {
                 try
                 {
                     //check if camera permissions are already granted
+                    //They should be already granted via the previous activity
                     if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
                     {
                         cameraSource.start(holder);
-                    }
-                    else
-                    {
-                        requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
                     }
                 }
                 catch (IOException e)
@@ -127,24 +121,6 @@ public class Page_Qr extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_REQUEST_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                restart_Activity();
-            }
-            else
-            {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                launch_Login_Activity();
-            }
-        }
-    }
 
     // METHODS
 
