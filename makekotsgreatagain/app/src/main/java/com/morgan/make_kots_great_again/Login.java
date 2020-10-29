@@ -127,7 +127,7 @@ public class Login extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "camera permission not granted", Toast.LENGTH_LONG).show();
             }
         }
     }
