@@ -1,7 +1,6 @@
 package com.morgan.make_kots_great_again;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.vision.CameraSource;
@@ -44,14 +42,15 @@ public class Page_Qr extends AppCompatActivity {
 
     // ANDROIDS LIFE CYCLE METHODS
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.page_qr);
         surfaceView = findViewById(R.id.cameraPreview);
         textView = findViewById(R.id.textView);
 
-        //Setting up the
+        //Setting up the barcodeDetector
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE)
                 .build();
@@ -62,10 +61,12 @@ public class Page_Qr extends AppCompatActivity {
                 .build();
 
         //Setting up the SurfaceView to show what the camera sees
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback()
+        {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+            public void surfaceCreated(@NonNull SurfaceHolder holder)
+            {
                 try
                 {
                     //check if camera permissions are already granted
@@ -127,13 +128,18 @@ public class Page_Qr extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == MY_CAMERA_REQUEST_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 restart_Activity();
-            } else {
+            }
+            else
+            {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 launch_Login_Activity();
             }
@@ -202,7 +208,8 @@ public class Page_Qr extends AppCompatActivity {
     * Only called when the user grant the camera permission to the application
     *
      */
-    public void restart_Activity(){
+    public void restart_Activity()
+    {
         Intent intent = getIntent();
         finish();
         startActivity(intent);

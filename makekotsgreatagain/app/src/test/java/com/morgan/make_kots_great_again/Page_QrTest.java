@@ -11,5 +11,6 @@ public class Page_QrTest {
         Page_Qr page_qr = new Page_Qr();
 
         assertTrue(page_qr.isTokenWrong("Unauthorized"));
+        assertFalse(page_qr.isTokenWrong("Successful request"));
     }
 }
