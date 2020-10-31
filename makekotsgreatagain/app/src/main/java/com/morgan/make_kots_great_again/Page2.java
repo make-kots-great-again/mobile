@@ -1,5 +1,6 @@
 package com.morgan.make_kots_great_again;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -7,11 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +69,18 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             TimeUnit.MILLISECONDS.sleep(500);
             set_spinner();
         } catch (InterruptedException ignored) { }
+
+        final Button btn_add_product = findViewById(R.id.button_new_product);
+        btn_add_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                addProductPopup popup = new addProductPopup(Page2.this);
+                popup.build();
+
+            }
+        });
+
     }
 
     public void Get_Shopping_Lists(String url, final ArrayList<String> arrayList) {
