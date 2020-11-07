@@ -14,11 +14,23 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
         android:paddingStart="8dp"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/add_btn"
         tools:ignore="RelativeOverlap,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/list_item_owner_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:textColor="@color/red"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/delete_btn"
+        app:layout_constraintTop_toTopOf="@+id/add_btn" />
 
     <ImageButton
         android:id="@+id/delete_btn"

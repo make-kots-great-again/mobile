@@ -15,12 +15,14 @@ import java.util.ArrayList;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list;
+    private ArrayList<String> items_owner;
     private ArrayList<String> items_quantity;
     private Context context;
 
 
-    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_quantity,  Context context) {
+    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity,  Context context) {
         this.list = list;
+        this.items_owner = items_owner;
         this.items_quantity = items_quantity;
         this.context = context;
     }
@@ -53,6 +55,9 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
+        TextView listItemOwnerText = (TextView)view.findViewById(R.id.list_item_owner_string);
+        listItemOwnerText.setText(items_owner.get(position));
+
         final TextView quantity = (TextView)view.findViewById(R.id.quantity);
         quantity.setText(items_quantity.get(position));
 
@@ -63,48 +68,50 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Log.d("PAGE2-TEST", (String) quantity.getText());
-                Log.d("PAGE2-TEST", (String) quantity.getText());
-                quantity.setText(remove_one_from_string_number((String) quantity.getText()));
+                if (remove_one((String) quantity.getText()) != "error"){
+                    quantity.setText(remove_one((String) quantity.getText()));
+                }
             }
         });
         addBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                quantity.setText(add_one_from_string_number((String) quantity.getText()));
+                if (add_one((String) quantity.getText()) != "error"){
+                    quantity.setText(add_one((String) quantity.getText()));
+                }
             }
         });
 
         return view;
     }
 
-    //--------------------------------------------------------
-    // Function that takes a String representing a number,
-    // converts it into a number and then subtract one to it.
-    // Returns the number-1 in a String
-    //--------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
+    // Function that takes a String that represents a number and returns the number-1 in a String
+    //--------------------------------------------------------------------------------------------
 
     /* @param (String) => Takes a String that represents a number
     *  @return (String) => Returns number-1 in form of a String */
 
-    public static String remove_one_from_string_number(String number_in_string){
+    public static String remove_one(String number_in_string){
         int number = Integer.parseInt(number_in_string);
-        int number_minus_one = number -1;
-        return Integer.toString(number_minus_one);
+        if (number >=2 && number <=20){
+            return Integer.toString(number - 1);
+        }
+        return "error";
     }
 
-    //--------------------------------------------------------
-    // Function that takes a String representing a number,
-    // converts it into a number and then adds one to it.
-    // Returns the number+1 in a String
-    //--------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
+    // Function that takes String that represents a number and returns the number+1 in a String
+    //--------------------------------------------------------------------------------------------
 
     /* @param (String) => Takes a String that represents a number
      *  @return (String) => Returns number+1 in form of a String */
 
-    public static String add_one_from_string_number(String number_in_string){
+    public static String add_one(String number_in_string){
         int number = Integer.parseInt(number_in_string);
-        int number_plus_one = number +1;
-        return Integer.toString(number_plus_one);
+        if (number >=1 && number <20){
+            return Integer.toString(number + 1);
+        }
+        return "error";
     }
 }
