@@ -8,21 +8,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <AutoCompleteTextView
         android:id="@+id/product_search_bar"
         android:layout_width="350dp"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
         android:hint="Rechercher un produit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="253dp"
-        />
+        tools:layout_editor_absoluteY="253dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="350dp"
         android:layout_gravity="center"
-        android:layout_height="47dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +29,11 @@
 
         <TextView
             android:id="@+id/text_quantity"
-            android:layout_width="97dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="28dp"
-            android:text="Quantité :"
+            android:text="  Quantité :"
+            android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/text_property"
             app:layout_constraintEnd_toStartOf="@+id/quantity_nb"
             app:layout_constraintHorizontal_bias="0.4"
@@ -51,7 +50,7 @@
 
     <LinearLayout
         android:layout_width="350dp"
-        android:layout_height="29dp"
+        android:layout_height="30dp"
         android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
@@ -60,10 +59,11 @@
 
         <TextView
             android:id="@+id/text_owner"
-            android:layout_width="99dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="28dp"
-            android:text="Propriétaire :"
+            android:layout_marginEnd="30dp"
+            android:text="  Propriétaire :"
+            android:textAlignment="center"
             app:layout_constraintEnd_toStartOf="@+id/spinner"
             app:layout_constraintHorizontal_bias="0.723"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +77,13 @@
             tools:layout_editor_absoluteY="347dp" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/add_btn"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add" />
 
 
 </LinearLayout>
