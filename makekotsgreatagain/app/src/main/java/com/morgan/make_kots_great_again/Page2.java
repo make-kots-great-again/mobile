@@ -39,6 +39,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
     final ArrayList<String> lists = new ArrayList<>();
     final ArrayList<String> items = new ArrayList<>();
+    final ArrayList<String> items_owner = new ArrayList<>();
     final ArrayList<String> items_quantity = new ArrayList<>();
 
     private final String get_url_route = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
@@ -105,7 +106,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         current_list_selected = parent.getItemAtPosition(position).toString();
         Log.d("SPINNER",current_list_selected);
 
-        Get_Shopping_Lists_items(get_url_route, items, items_quantity);
+        Get_Shopping_Lists_items(get_url_route, items, items_owner, items_quantity);
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_listview();
@@ -117,7 +118,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         //Do Nothing
     }
 
-    public void Get_Shopping_Lists_items(String url, final ArrayList<String> items, final ArrayList<String> quantity) {
+    public void Get_Shopping_Lists_items(String url, final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity) {
         OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder().header("Authorization", current_user_token).url(url).build();
@@ -144,8 +145,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
                         String product_name = object.getString("product_name");
+                        String product_owner = object.getString("username");
                         String product_quantity = object.getString("quantity");
                         items.add(product_name);
+                        owner.add(product_owner);
                         quantity.add(product_quantity);
                     }
 
@@ -154,7 +157,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         });
     }
     private void set_listview(){
-        listView.setAdapter(new MyCustomAdapter(items, items_quantity, getBaseContext()));
+        listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, getBaseContext()));
     }
     private void set_spinner(){
         spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
