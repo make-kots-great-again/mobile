@@ -48,7 +48,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private final String get_url_route = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
     //private final String get_url_route = "http://172.18.0.3:8000/server/api/shoppingList/";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +77,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
                 addProductPopup popup = new addProductPopup(Page2.this);
                 popup.build();
+
 
             }
         });
@@ -120,6 +120,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         //Lors d'un choix de liste, requete GET avec le nom de liste pour choper les elements de cette liste
         current_list_selected = parent.getItemAtPosition(position).toString();
         Log.d("SPINNER",current_list_selected);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("list", current_list_selected);
+        editor.commit();
 
         Get_Shopping_Lists_items(get_url_route, items, items_owner, items_quantity);
         try {
@@ -178,9 +183,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         });
     }
+
     private void set_listview(){
         listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, getBaseContext()));
     }
+
     private void set_spinner(){
         spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
         spinner.setAdapter(spinnerArrayAdapter);

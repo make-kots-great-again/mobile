@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,12 +49,13 @@ public class addProductPopup extends Dialog {
 
     private AutoCompleteTextView search_bar;
     private NumberPicker nb_picker;
-    private Spinner spinner;
+    private RadioGroup radioGroup;
+    private RadioButton groupeRadio, meRadio;
     private TextView quantity, owner;
     private Button add_btn;
 
     private String qty, own, search_bar_hint;
-    private String current_user_name, current_user_token, current_group_id;
+    private String current_user_name, current_user_token, current_group_id, current_list_selected;
 
     ArrayAdapter<String> adapter;
 
@@ -68,6 +71,7 @@ public class addProductPopup extends Dialog {
         current_user_name = pref.getString("username", null);
         current_user_token = pref.getString("token", null);
         current_group_id = pref.getString("group_id", null);
+        current_list_selected = pref.getString("list", null);
 
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
@@ -100,10 +104,18 @@ public class addProductPopup extends Dialog {
         this.nb_picker.setMinValue(1);
 
         this.owner = findViewById(R.id.text_owner);
-        this.spinner = findViewById(R.id.spinner);
+        this.radioGroup = findViewById(R.id.radio_group);
+        if(current_list_selected.contains("personal list")){
+            this.owner.setVisibility(View.INVISIBLE);
+            this.radioGroup.setVisibility(View.INVISIBLE);
+        }
+        this.meRadio = findViewById(R.id.btn_owner);
+        this.meRadio.setChecked(true);
+        this.groupeRadio = findViewById(R.id.btn_group);
 
         this.add_btn = findViewById(R.id.add_btn);
-        add_btn.setOnClickListener(new View.OnClickListener() {
+        add_btn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id;
@@ -112,6 +124,11 @@ public class addProductPopup extends Dialog {
                 try {
                     json.put("code", codes.get(search_bar.getText().toString()));
                     json.put("quantity", nb_picker.getValue());
+
+                    if(groupeRadio.isChecked()){
+                        json.put("groupProduct", true);
+                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -133,7 +150,16 @@ public class addProductPopup extends Dialog {
 
                             final JSONObject Jobject = new JSONObject(responseBody);
 
-                            Log.d("ok", Jobject.getString("message"));
+                            Log.d("ok", responseBody.toString());
+
+                            Log.d("msg", Jobject.getString("message"));
+                            Log.d("error", Jobject.getString("error"));
+
+                            //activity.Get_Shopping_Lists_items("https://kotsapp.herokuapp.com/server/api/shoppingList/", );
+
+                            if(Jobject.getString("success").equals("true")){
+                                //return to page2 update list
+                            }
 
                             activity.runOnUiThread(new Runnable() {
                                 public void run() {
