@@ -162,9 +162,16 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                         String product_name = object.getString("product_name");
                         String product_owner = object.getString("username");
                         String product_quantity = object.getString("quantity");
+                        String group_id = object.getString("groupId");
                         items.add(product_name);
                         owner.add(product_owner);
                         quantity.add(product_quantity);
+
+                        // Permet de stocker l'ID du groupe dans une "shared preference"
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("group_id", group_id);
+                        editor.commit();
                     }
 
                 } catch (JSONException ignored) { }

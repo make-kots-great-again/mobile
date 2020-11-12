@@ -2,7 +2,6 @@ package com.morgan.make_kots_great_again;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +13,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,17 +24,24 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSink;
 
 public class addProductPopup extends Dialog {
 
@@ -42,21 +52,22 @@ public class addProductPopup extends Dialog {
     private Button add_btn;
 
     private String qty, own, search_bar_hint;
-    private String current_user_name, current_user_token;
+    private String current_user_name, current_user_token, current_group_id;
 
     ArrayAdapter<String> adapter;
 
     private ArrayList<String> products = new ArrayList<>();
+    private Map<String, Integer> codes = new HashMap<>();
 
-    public addProductPopup(Activity activity){
+    //CONSTRUCTOR
+    public addProductPopup(final Activity activity){
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.add_new_product_popup);
 
         SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
         current_user_name = pref.getString("username", null);
         current_user_token = pref.getString("token", null);
-
-        //getProductFromPattern(("O"));
+        current_group_id = pref.getString("group_id", null);
 
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
@@ -73,16 +84,14 @@ public class addProductPopup extends Dialog {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
                 if(s.length() == search_bar.getThreshold()){
-                    getProductFromPattern((s.toString()));
+                    getProductsFromPattern((s.toString()));
                     refillAdapter();
                 }
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
         this.quantity = findViewById(R.id.text_quantity);
@@ -97,30 +106,58 @@ public class addProductPopup extends Dialog {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id;
 
-                String product_name = search_bar.getText().toString();
-                int product_quantity = nb_picker.getValue();
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("code", codes.get(search_bar.getText().toString()));
+                    json.put("quantity", nb_picker.getValue());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                String url = "http://localhost:8000/server/api/qqch";
+                RequestBody body = RequestBody.create(MediaType.parse("application/json"), String.valueOf(json));
 
                 OkHttpClient client = new OkHttpClient();
 
-                Request request = new Request.Builder().header("Authorization", current_user_token ).url(url).build();
+                Request request = new Request.Builder().header("Authorization", current_user_token).url(url).post(body).build();
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {}
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        //update list view
+                    public void onResponse(Call call, Response response) throws IOException{
+                        try {
+                            String responseBody = response.body().string();
+
+                            final JSONObject Jobject = new JSONObject(responseBody);
+
+                            Log.d("ok", Jobject.getString("message"));
+
+                            activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    try {
+                                        Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
                 });
             }
         });
     }
 
-
+    /*
+    * Build the popup when called
+    */
     public void build(){
         show();
         this.search_bar.setHint(search_bar_hint);
@@ -128,13 +165,24 @@ public class addProductPopup extends Dialog {
         this.owner.setText(own);
     }
 
+    /*
+    * Clear and refill the adapter of the AutoCompleteTextView
+    * Called after each API request to get a list of product from the AutoCompleteTextView's pattern
+    * */
     public void refillAdapter(){
+        adapter.clear();
+
         for(int i=0; i<products.size(); i++){
             adapter.add(products.get(i));
         }
     }
 
-    public void getProductFromPattern(String pattern){
+    /*
+    * Make an API request to get a list of product that contains the pattern
+    *
+    * @param patter : current text written in the AutoCompleteTextView
+    * */
+    public void getProductsFromPattern(String pattern){
         String url = "http://kotsapp.herokuapp.com/server/api/products/" + pattern;
 
         OkHttpClient client = new OkHttpClient();
@@ -149,8 +197,6 @@ public class addProductPopup extends Dialog {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("ok", "response received");
-
                 String responseBody = response.body().string();
                 try {
                     JSONObject Jobject = new JSONObject(responseBody);
@@ -161,8 +207,11 @@ public class addProductPopup extends Dialog {
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
                         String product_name = object.getString("product_name");
+                        String product_code = object.getString("code");
 
                         products.add(product_name);
+
+                        codes.put(product_name, Integer.parseInt(product_code));
                     }
 
                 } catch (JSONException ignored) { }
