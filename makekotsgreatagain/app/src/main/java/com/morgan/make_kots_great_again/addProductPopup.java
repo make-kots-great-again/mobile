@@ -50,6 +50,8 @@ public class addProductPopup extends Dialog {
     private ArrayList<String> products = new ArrayList<>();
     private Map<String, Integer> codes = new HashMap<>();
 
+    boolean requestSuccess = false;
+
     //CONSTRUCTOR
     public addProductPopup(final Activity activity)
     {
@@ -117,6 +119,8 @@ public class addProductPopup extends Dialog {
             public void onClick(View v)
             {
                 addProductToList(activity);
+                //close the popup if the activity
+                dismiss();
             }
         });
     }
@@ -219,8 +223,6 @@ public class addProductPopup extends Dialog {
 
                     final JSONObject Jobject = new JSONObject(responseBody);
 
-                    //activity.Get_Shopping_Lists_items("https://kotsapp.herokuapp.com/server/api/shoppingList/", );
-
                     activity.runOnUiThread(new Runnable()
                     {
                         @Override
@@ -238,9 +240,8 @@ public class addProductPopup extends Dialog {
                     });
 
                     if(Jobject.getString("success").equals("true")){
-                        //return to page2 update list
+                        requestSuccess = true;
                     }
-
                 }
                 catch (Exception e)
                 {
