@@ -23,15 +23,13 @@
         android:id="@+id/text_quantity"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="140dp"
+        android:layout_marginEnd="116dp"
         android:text="  Quantité :"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/quantity_nb"
         app:layout_constraintEnd_toStartOf="@+id/quantity_nb"
-        app:layout_constraintHorizontal_bias="0.984"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/quantity_nb"
-        app:layout_constraintVertical_bias="0.509" />
+        app:layout_constraintVertical_bias="0.496" />
 
     <NumberPicker
         android:id="@+id/quantity_nb"
@@ -47,15 +45,13 @@
         android:id="@+id/text_owner"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="104dp"
+        android:layout_marginEnd="80dp"
         android:text="  Propriétaire :"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/radio_group"
         app:layout_constraintEnd_toStartOf="@+id/radio_group"
-        app:layout_constraintHorizontal_bias="0.984"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/radio_group"
-        app:layout_constraintVertical_bias="0.555" />
+        app:layout_constraintVertical_bias="0.488" />
 
     <RadioGroup
         android:id="@+id/radio_group"
