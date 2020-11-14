@@ -91,15 +91,12 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("GET", "Error");
-            }
+            public void onFailure(Call call, IOException e) { }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
                 String responseBody = response.body().string();
-                Log.d("Get-Ok",responseBody);
                 try {
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
@@ -108,6 +105,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                     while(iter.hasNext()){
                         String key = iter.next();
                         arrayList.add(key);
+                        Log.d("Shoppinglist",key.toString());
                     }
                 } catch (JSONException ignored) { }
             }
@@ -139,6 +137,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     }
 
     public void Get_Shopping_Lists_items(String url, final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity) {
+        reset_arrayLists(items, owner, quantity);
         OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder().header("Authorization", current_user_token).url(url).build();
@@ -191,5 +190,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private void set_spinner(){
         spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
         spinner.setAdapter(spinnerArrayAdapter);
+    }
+    private void reset_arrayLists(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity){
+        items.clear();
+        owner.clear();
+        quantity.clear();
     }
 }
