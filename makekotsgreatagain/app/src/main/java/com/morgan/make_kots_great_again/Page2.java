@@ -78,7 +78,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 addProductPopup popup = new addProductPopup(Page2.this);
                 popup.build();
 
-
             }
         });
 

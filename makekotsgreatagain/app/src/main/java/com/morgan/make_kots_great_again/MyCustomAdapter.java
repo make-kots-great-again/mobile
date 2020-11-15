@@ -97,6 +97,12 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         if (number >=2 && number <=20){
             return Integer.toString(number - 1);
         }
+
+        if(number == 1){
+            //deleteProductPopup popup = new deleteProductPopup();
+            //popup.show();
+        }
+
         return "error";
     }
 
