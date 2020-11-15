@@ -6,6 +6,12 @@ Target audience | IDE | Language
 
 ---
 
+### Release
+
+* Version ***1.0*** : [Make-kots-great-again.apk](https://github.com/make-kots-great-again/mobile/blob/master/release/make-kots-great-again.apk)
+
+---
+
 ### Mocup
 
 Link to Mocup (read only) => https://app.moqups.com/srj025RSEb/view/page/ae8fe8eb0

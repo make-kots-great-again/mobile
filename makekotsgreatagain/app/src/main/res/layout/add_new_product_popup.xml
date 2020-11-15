@@ -3,81 +3,93 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <AutoCompleteTextView
+        android:id="@+id/product_search_bar"
+        android:layout_width="287dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:hint="Rechercher un produit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="272dp"
-        android:layout_height="91dp"
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/text_quantity"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="116dp"
+        android:text="  Quantité :"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/quantity_nb"
+        app:layout_constraintEnd_toStartOf="@+id/quantity_nb"
+        app:layout_constraintTop_toTopOf="@+id/quantity_nb"
+        app:layout_constraintVertical_bias="0.496" />
+
+    <NumberPicker
+        android:id="@+id/quantity_nb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_search_bar"
+        app:layout_constraintVertical_bias="0.268" />
+
+    <TextView
+        android:id="@+id/text_owner"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:text="  Propriétaire :"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/radio_group"
+        app:layout_constraintEnd_toStartOf="@+id/radio_group"
+        app:layout_constraintTop_toTopOf="@+id/radio_group"
+        app:layout_constraintVertical_bias="0.488" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_search_bar">
+
+        <RadioButton
+            android:id="@+id/btn_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Moi"
+            tools:layout_editor_absoluteX="195dp"
+            tools:layout_editor_absoluteY="408dp" />
+
+        <RadioButton
+            android:id="@+id/btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Groupe"
+            tools:layout_editor_absoluteX="48dp"
+            tools:layout_editor_absoluteY="440dp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
-
-        <TextView
-            android:id="@+id/product_search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rechercher un produit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="250dp" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="24dp"
-                android:text="Quantité :"
-                app:layout_constraintBottom_toTopOf="@+id/text_property"
-                app:layout_constraintEnd_toStartOf="@+id/quantity_nb"
-                app:layout_constraintHorizontal_bias="0.378"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <NumberPicker
-                android:id="@+id/quantity_nb"
-                android:layout_width="47dp"
-                android:layout_height="33dp"
-                tools:layout_editor_absoluteX="174dp"
-                tools:layout_editor_absoluteY="292dp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_property"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="28dp"
-                android:text="Propriétaire :"
-                app:layout_constraintEnd_toStartOf="@+id/spinner"
-                app:layout_constraintHorizontal_bias="0.43"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="341dp" />
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="159dp"
-                android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="174dp"
-                tools:layout_editor_absoluteY="340dp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
