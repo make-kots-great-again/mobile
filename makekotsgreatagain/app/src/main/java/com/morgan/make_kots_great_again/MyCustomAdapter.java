@@ -99,8 +99,9 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
 
         if(number == 1){
-            //deleteProductPopup popup = new deleteProductPopup();
-            //popup.show();
+            Page2 page2 = new Page2();
+            deleteProductPopup popup = new deleteProductPopup(page2);
+            popup.show();
         }
 
         return "error";

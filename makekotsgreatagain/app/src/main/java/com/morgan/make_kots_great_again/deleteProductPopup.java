@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class deleteProductPopup extends Dialog
         SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
         current_user_token = pref.getString("token", null);
 
-        this.text = "Souhaitez-vous supprimer ce produit de la liste";
+        this.text = "Souhaitez-vous supprimer ce produit de la liste ?";
         this.yesButtonText = "OUI";
         this.noButtonText = "NON";
 
@@ -47,7 +49,7 @@ public class deleteProductPopup extends Dialog
         this.yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //deleteProduct();
+                //deleteProduct(activity, product_uid);
             }
         });
 
@@ -69,14 +71,13 @@ public class deleteProductPopup extends Dialog
         this.noButton.setText(noButtonText);
     }
 
-    public void deleteProduct()
+    public void deleteProduct(final Activity activity, String uidProduct)
     {
-        String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/IDinList";
+        String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/IDinList"/*+ uidProduct*/;
         JSONObject json = null;
 
         Request request = new Request.Builder()
                 .header("Authorization", current_user_token)
-                .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
                 .url(url)
                 .build();
 
@@ -92,6 +93,33 @@ public class deleteProductPopup extends Dialog
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
             {
                 String responseBody = response.body().string();
+
+                final JSONObject Jobject;
+
+                try
+                {
+                    Jobject = new JSONObject(responseBody);
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
     }
