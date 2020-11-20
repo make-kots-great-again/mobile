@@ -3,9 +3,12 @@ package com.morgan.make_kots_great_again;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.textclassifier.TextLinks;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +35,7 @@ public class deleteProductPopup extends Dialog
 
     private String current_user_token;
 
-    public deleteProductPopup(Activity activity)
+    public deleteProductPopup(final Activity activity)
     {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.delete_product_popup);
@@ -46,9 +49,11 @@ public class deleteProductPopup extends Dialog
 
         this.textView = findViewById(R.id.text);
         this.yesButton = findViewById(R.id.yesBtn);
-        this.yesButton.setOnClickListener(new View.OnClickListener() {
+        this.yesButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 //deleteProduct(activity, product_uid);
             }
         });
@@ -74,7 +79,6 @@ public class deleteProductPopup extends Dialog
     public void deleteProduct(final Activity activity, String uidProduct)
     {
         String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/IDinList"/*+ uidProduct*/;
-        JSONObject json = null;
 
         Request request = new Request.Builder()
                 .header("Authorization", current_user_token)

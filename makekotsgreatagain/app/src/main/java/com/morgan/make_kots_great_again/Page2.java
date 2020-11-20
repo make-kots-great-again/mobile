@@ -73,14 +73,12 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         final Button btn_add_product = findViewById(R.id.button_new_product);
         btn_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
                 addProductPopup popup = new addProductPopup(Page2.this);
                 popup.build();
-
             }
         });
-
     }
 
     public void Get_Shopping_Lists(String url, final ArrayList<String> arrayList) {
@@ -183,13 +181,14 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     }
 
     private void set_listview(){
-        listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, getBaseContext()));
+        listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, getBaseContext(), Page2.this));
     }
 
     private void set_spinner(){
         spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
         spinner.setAdapter(spinnerArrayAdapter);
     }
+
     private void reset_arrayLists(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity){
         items.clear();
         owner.clear();

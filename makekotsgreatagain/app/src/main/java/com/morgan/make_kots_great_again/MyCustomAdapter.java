@@ -1,6 +1,7 @@
 package com.morgan.make_kots_great_again;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,17 +15,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
+    private static Activity activity;
     private ArrayList<String> list;
     private ArrayList<String> items_owner;
     private ArrayList<String> items_quantity;
     private Context context;
 
 
-    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity,  Context context) {
+    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity,  Context context, Activity activity) {
         this.list = list;
         this.items_owner = items_owner;
         this.items_quantity = items_quantity;
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -99,8 +102,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
 
         if(number == 1){
-            Page2 page2 = new Page2();
-            deleteProductPopup popup = new deleteProductPopup(page2);
+            deleteProductPopup popup = new deleteProductPopup(activity);
             popup.show();
         }
 
