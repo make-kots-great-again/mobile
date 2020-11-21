@@ -19,13 +19,15 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list;
     private ArrayList<String> items_owner;
     private ArrayList<String> items_quantity;
+    private ArrayList<String> items_uid;
     private Context context;
 
 
-    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity,  Context context, Activity activity) {
+    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity, ArrayList<String> items_uid, Context context, Activity activity) {
         this.list = list;
         this.items_owner = items_owner;
         this.items_quantity = items_quantity;
+        this.items_uid = items_uid;
         this.context = context;
         this.activity = activity;
     }
@@ -71,8 +73,9 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (remove_one((String) quantity.getText()) != "error"){
-                    quantity.setText(remove_one((String) quantity.getText()));
+                if (remove_one((String) quantity.getText(), items_uid.get(position)) != "error")
+                {
+                    quantity.setText(remove_one((String) quantity.getText(), items_uid.get(position)));
                 }
             }
         });
@@ -95,14 +98,15 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
     *  @return (String) => Returns number-1 in form of a String */
 
-    public static String remove_one(String number_in_string){
+    public static String remove_one(String number_in_string, String uid){
         int number = Integer.parseInt(number_in_string);
         if (number >=2 && number <=20){
             return Integer.toString(number - 1);
         }
 
         if(number == 1){
-            deleteProductPopup popup = new deleteProductPopup(activity);
+            Log.d("uid", uid);
+            deleteProductPopup popup = new deleteProductPopup(activity, uid);
             popup.show();
         }
 

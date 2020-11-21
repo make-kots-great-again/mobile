@@ -40,10 +40,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private ArrayAdapter<String> spinnerArrayAdapter;
     private String current_list_selected;
 
-    final ArrayList<String> lists = new ArrayList<>();
-    final ArrayList<String> items = new ArrayList<>();
+    final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
+    final ArrayList<String> items = new ArrayList<>(); // items names
     final ArrayList<String> items_owner = new ArrayList<>();
     final ArrayList<String> items_quantity = new ArrayList<>();
+    final ArrayList<String> items_uid = new ArrayList<>();
 
     private final String get_url_route = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
     //private final String get_url_route = "http://172.18.0.3:8000/server/api/shoppingList/";
@@ -65,6 +66,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + current_user_name + "</span> !"));
 
         Get_Shopping_Lists(get_url_route, lists);
+
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_spinner();
@@ -121,7 +123,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         editor.putString("list", current_list_selected);
         editor.commit();
 
-        Get_Shopping_Lists_items(get_url_route, items, items_owner, items_quantity);
+        Get_Shopping_Lists_items(get_url_route, items, items_owner, items_quantity, items_uid);
+
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_listview();
@@ -133,8 +136,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         //Do Nothing
     }
 
-    public void Get_Shopping_Lists_items(String url, final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity) {
-        reset_arrayLists(items, owner, quantity);
+    public void Get_Shopping_Lists_items(String url, final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity, final ArrayList<String> uid) {
+        reset_arrayLists(items, owner, quantity, uid);
         OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder().header("Authorization", current_user_token).url(url).build();
@@ -157,16 +160,20 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
                     items.clear();
                     quantity.clear();
+                    uid.clear();
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
                         String product_name = object.getString("product_name");
                         String product_owner = object.getString("username");
                         String product_quantity = object.getString("quantity");
+                        String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
+
                         items.add(product_name);
                         owner.add(product_owner);
                         quantity.add(product_quantity);
+                        uid.add(product_uid);
 
                         // Permet de stocker l'ID du groupe dans une "shared preference"
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
@@ -181,7 +188,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     }
 
     private void set_listview(){
-        listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, getBaseContext(), Page2.this));
+        listView.setAdapter(new MyCustomAdapter(items, items_owner, items_quantity, items_uid, getBaseContext(), Page2.this));
     }
 
     private void set_spinner(){
@@ -189,9 +196,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         spinner.setAdapter(spinnerArrayAdapter);
     }
 
-    private void reset_arrayLists(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity){
+    private void reset_arrayLists(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity, final ArrayList<String> uid){
         items.clear();
         owner.clear();
         quantity.clear();
+        uid.clear();
     }
 }

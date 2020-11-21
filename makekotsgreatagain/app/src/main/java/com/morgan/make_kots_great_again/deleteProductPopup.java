@@ -3,6 +3,7 @@ package com.morgan.make_kots_great_again;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,7 +36,7 @@ public class deleteProductPopup extends Dialog
 
     private String current_user_token;
 
-    public deleteProductPopup(final Activity activity)
+    public deleteProductPopup(final Activity activity, final String product_uid)
     {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.delete_product_popup);
@@ -54,7 +55,7 @@ public class deleteProductPopup extends Dialog
             @Override
             public void onClick(View v)
             {
-                //deleteProduct(activity, product_uid);
+                deleteProductRequest(activity, product_uid);
             }
         });
 
@@ -76,16 +77,19 @@ public class deleteProductPopup extends Dialog
         this.noButton.setText(noButtonText);
     }
 
-    public void deleteProduct(final Activity activity, String uidProduct)
+    public void deleteProductRequest(final Activity activity, String uidProduct)
     {
-        String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/IDinList"/*+ uidProduct*/;
+        String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/" + uidProduct;
 
         Request request = new Request.Builder()
                 .header("Authorization", current_user_token)
                 .url(url)
+                .delete()
                 .build();
 
         OkHttpClient client = new OkHttpClient();
+        Log.d("request", "we send it");
+
 
         client.newCall(request).enqueue(new Callback()
         {
@@ -96,6 +100,7 @@ public class deleteProductPopup extends Dialog
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
             {
+                Log.d("response", "we got it");
                 String responseBody = response.body().string();
 
                 final JSONObject Jobject;
