@@ -3,6 +3,8 @@ package com.morgan.make_kots_great_again;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,17 +57,25 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.listview_format, null);
         }
 
-        //Handle TextView and display string from your list
+        //Product NAME
         TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
+        //Product OWNER
         TextView listItemOwnerText = (TextView)view.findViewById(R.id.list_item_owner_string);
+        if (items_owner.get(position).equals("group")){
+            listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
+        }
+        else if (items_owner.get(position).equals("Me")){
+            listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));
+        }
         listItemOwnerText.setText(items_owner.get(position));
 
+        //Product QUANTITY
         final TextView quantity = (TextView)view.findViewById(R.id.quantity);
         quantity.setText(items_quantity.get(position));
 
-        //Handle buttons and add onClickListeners
+        //Image Buttons (Moins et Plus)
         ImageButton deleteBtn = (ImageButton)view.findViewById(R.id.delete_btn);
         ImageButton addBtn = (ImageButton)view.findViewById(R.id.add_btn);
 
