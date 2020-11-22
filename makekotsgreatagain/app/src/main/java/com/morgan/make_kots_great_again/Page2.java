@@ -1,6 +1,7 @@
 package com.morgan.make_kots_great_again;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -63,6 +64,14 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         listView = findViewById(R.id.listview);
         TextView welcome_user = findViewById(R.id.label_welcome);
 
+        //----------------------------------------------------------
+        // Fix bug of having to type 3 times username and password
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+            set_spinner();
+        } catch (InterruptedException ignored) { }
+        // ---------------------------------------------------------
+
         welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + current_user_name + "</span> !"));
 
         Get_Shopping_Lists(get_url_route, lists);
@@ -79,6 +88,14 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             {
                 addProductPopup popup = new addProductPopup(Page2.this);
                 popup.build();
+            }
+        });
+
+        final Button btn_mode_achat = findViewById(R.id.button_mode_achat);
+        btn_mode_achat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launch_page3();
             }
         });
     }
@@ -166,6 +183,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                         JSONObject object = Jarray.getJSONObject(i);
                         String product_name = object.getString("product_name");
                         String product_owner = object.getString("username");
+                        if (product_owner.equals(current_user_name)){ product_owner = "Me"; } // US M12
                         String product_quantity = object.getString("quantity");
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
@@ -201,5 +219,13 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         owner.clear();
         quantity.clear();
         uid.clear();
+    }
+    //-----------------------------------------------------------
+    // Function that destroy current activity and launch "Page3"
+    //-----------------------------------------------------------
+    private void launch_page3(){
+        Intent intent = new Intent(this, Page3.class);
+        startActivity(intent);
+        finish();// Kills curent activity
     }
 }
