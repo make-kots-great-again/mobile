@@ -155,7 +155,7 @@ public class addProductPopup extends Dialog {
     * */
     public void getProductsFromPattern(String pattern)
     {
-        String url = "http://kotsapp.herokuapp.com/server/api/products/" + pattern;
+        String url = "https://kotsapp.herokuapp.com/server/api/products/" + pattern;
 
         OkHttpClient client = new OkHttpClient();
 
