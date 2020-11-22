@@ -63,13 +63,15 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product OWNER
         TextView listItemOwnerText = (TextView)view.findViewById(R.id.list_item_owner_string);
-        if (items_owner.get(position).equals("group")){
+        String current_text = items_owner.get(position);
+        listItemOwnerText.setText(current_text);
+        if (current_text.equals("group")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
+            listItemOwnerText.setText(current_text.toUpperCase());
         }
-        else if (items_owner.get(position).equals("Me")){
+        else if (current_text.equals("Me")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));
         }
-        listItemOwnerText.setText(items_owner.get(position));
 
         //Product QUANTITY
         final TextView quantity = (TextView)view.findViewById(R.id.quantity);
