@@ -119,7 +119,6 @@ public class addProductPopup extends Dialog {
             public void onClick(View v)
             {
                 addProductToList(activity);
-                //close the popup if the activity
                 dismiss();
             }
         });
