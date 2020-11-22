@@ -16,7 +16,7 @@ Target audience | IDE | Language
 
 Link to Mocup (read only) => https://app.moqups.com/srj025RSEb/view/page/ae8fe8eb0
 
-<img src="./img/mobile.png">
+<img src="./img/mocup.png">
 
 ---
 
