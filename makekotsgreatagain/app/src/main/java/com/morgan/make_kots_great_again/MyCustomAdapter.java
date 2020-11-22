@@ -3,7 +3,6 @@ package com.morgan.make_kots_great_again;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +104,6 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
 
         if(number == 1){
-            Log.d("uid", uid);
             deleteProductPopup popup = new deleteProductPopup(activity, uid);
             popup.show();
         }

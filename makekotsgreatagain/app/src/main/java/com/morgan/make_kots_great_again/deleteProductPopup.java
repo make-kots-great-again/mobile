@@ -3,13 +3,8 @@ package com.morgan.make_kots_great_again;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.textclassifier.TextLinks;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,21 +16,23 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class deleteProductPopup extends Dialog
 {
-    private String yesButtonText, noButtonText, text;
-
     private TextView textView;
     private Button yesButton, noButton;
-
     private String current_user_token;
+    private String yesButtonText, noButtonText, text;
 
+    /**
+     * Constructor of the popup
+     *
+     * @param activity : activity from which the popup is called
+     * @param product_uid : Unique ID of the product that we want to delete
+     */
     public deleteProductPopup(final Activity activity, final String product_uid)
     {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
@@ -44,18 +41,24 @@ public class deleteProductPopup extends Dialog
         SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
         current_user_token = pref.getString("token", null);
 
+        //Setup string's of the popup ----------------------------------------------
         this.text = "Souhaitez-vous supprimer ce produit de la liste ?";
         this.yesButtonText = "OUI";
         this.noButtonText = "NON";
 
+        //Setup up text of the popup -----------------------------------------------
         this.textView = findViewById(R.id.text);
+
+        //Setup yes and no buttons -----------------------------------------------
         this.yesButton = findViewById(R.id.yesBtn);
         this.yesButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                //Make a request API to delete the product and leave the popup
                 deleteProductRequest(activity, product_uid);
+                dismiss();
             }
         });
 
@@ -69,6 +72,9 @@ public class deleteProductPopup extends Dialog
         });
     }
 
+    /**
+     * Build and show the the popup when called
+     */
     public void build()
     {
         show();
@@ -77,6 +83,14 @@ public class deleteProductPopup extends Dialog
         this.noButton.setText(noButtonText);
     }
 
+    /**
+     * Build and send a API request in order to delete a product
+     *
+     * The Unique ID of the product allows to know in which shoppingList it's located
+     *
+     * @param activity : activity calling the popup
+     * @param uidProduct : Unique ID of the product that we want to delete
+     */
     public void deleteProductRequest(final Activity activity, String uidProduct)
     {
         String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/" + uidProduct;
@@ -88,8 +102,6 @@ public class deleteProductPopup extends Dialog
                 .build();
 
         OkHttpClient client = new OkHttpClient();
-        Log.d("request", "we send it");
-
 
         client.newCall(request).enqueue(new Callback()
         {
@@ -100,7 +112,6 @@ public class deleteProductPopup extends Dialog
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
             {
-                Log.d("response", "we got it");
                 String responseBody = response.body().string();
 
                 final JSONObject Jobject;
