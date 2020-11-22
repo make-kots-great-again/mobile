@@ -58,12 +58,13 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
 
         //Product NAME
-        TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
-        listItemText.setText(list.get(position));
+        TextView listItemText = view.findViewById(R.id.list_item_string);
+        listItemText.setText(cutLongText(list.get(position)));
 
         //Product OWNER
-        TextView listItemOwnerText = (TextView)view.findViewById(R.id.list_item_owner_string);
+        TextView listItemOwnerText = view.findViewById(R.id.list_item_owner_string);
         String current_text = items_owner.get(position);
+
         listItemOwnerText.setText(current_text);
         if (current_text.equals("group")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
@@ -74,12 +75,12 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
 
         //Product QUANTITY
-        final TextView quantity = (TextView)view.findViewById(R.id.quantity);
+        final TextView quantity = view.findViewById(R.id.quantity);
         quantity.setText(items_quantity.get(position));
 
         //Image Buttons (Moins et Plus)
-        ImageButton deleteBtn = (ImageButton)view.findViewById(R.id.delete_btn);
-        ImageButton addBtn = (ImageButton)view.findViewById(R.id.add_btn);
+        ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
+        ImageButton addBtn = view.findViewById(R.id.add_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -109,7 +110,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
     *  @return (String) => Returns number-1 in form of a String */
 
-    public static String remove_one(String number_in_string, String uid){
+    private static String remove_one(String number_in_string, String uid){
         int number = Integer.parseInt(number_in_string);
         if (number >=2 && number <=20){
             return Integer.toString(number - 1);
@@ -130,11 +131,21 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
      *  @return (String) => Returns number+1 in form of a String */
 
-    public static String add_one(String number_in_string){
+    private static String add_one(String number_in_string){
         int number = Integer.parseInt(number_in_string);
         if (number >=1 && number <20){
             return Integer.toString(number + 1);
         }
         return "error";
+    }
+    private static String cutLongText(String string){
+        if (string.length() >=22){
+            StringBuilder str = new StringBuilder(string);
+            str.replace(22, string.length(), "...");
+            return str.toString();
+        }
+        else { // String is not bigger than or equal to 20
+            return string;
+        }
     }
 }
