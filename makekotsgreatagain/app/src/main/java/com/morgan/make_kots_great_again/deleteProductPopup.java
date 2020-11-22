@@ -93,7 +93,7 @@ public class deleteProductPopup extends Dialog
      */
     public void deleteProductRequest(final Activity activity, String uidProduct)
     {
-        String url = "http://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/" + uidProduct;
+        String url = "https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/" + uidProduct;
 
         Request request = new Request.Builder()
                 .header("Authorization", current_user_token)
