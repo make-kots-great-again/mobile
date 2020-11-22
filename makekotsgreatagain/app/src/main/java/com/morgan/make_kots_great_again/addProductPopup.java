@@ -161,8 +161,6 @@ public class addProductPopup extends Dialog {
 
         Request request = new Request.Builder().header("Authorization", current_user_token ).url(url).build();
 
-        Log.d("ok", "send request");
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {}
@@ -203,7 +201,7 @@ public class addProductPopup extends Dialog {
 
         Request request = new Request.Builder()
                 .header("Authorization", current_user_token)
-                .url("http://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id)
+                .url("https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id)
                 .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
                 .build();
 
