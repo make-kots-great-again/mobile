@@ -39,7 +39,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private Spinner spinner;
     private ArrayAdapter<String> spinnerArrayAdapter;
     protected String current_list_selected;
-    protected Button btn_mode_achat;
+    protected ImageButton btn_refresh;
 
     protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
     protected final ArrayList<String> items = new ArrayList<>(); // items names
@@ -90,7 +90,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         });
 
-        btn_mode_achat = findViewById(R.id.button_mode_achat);
+        Button btn_mode_achat = findViewById(R.id.button_mode_achat);
         btn_mode_achat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +100,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         // A CHANGER !!!!!!!
         // ---------------------------------------------------------------------------------------------------------------------------------------------
-        ImageButton btn_refresh = findViewById(R.id.button_refresh);
+        btn_refresh = findViewById(R.id.button_refresh);
         btn_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,9 +161,14 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         startActivity(intent);
         finish();// Kills curent activity
     }
-    protected void refresh_user_vue(){
+    private void refresh_user_vue(){
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(items, items_owner, items_quantity, items_uid);
         apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
+    }
+    protected void refresh_user_vue2(ArrayList<String> items, ArrayList<String> owner, ArrayList<String> quantity, ArrayList<String> uid, String current_list_selected, Activity activity){
+        ApiRequest apiRequest = new ApiRequest(Page2.this);
+        reset_arrayLists(items, owner, quantity, uid);
+        apiRequest.Get_Shopping_Lists_items(items, owner, quantity, uid, current_list_selected, activity);
     }
 }
