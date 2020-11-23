@@ -24,12 +24,11 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     private Context context;
 
 
-    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity, ArrayList<String> items_uid, Context context, Activity activity) {
+    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity, ArrayList<String> items_uid, Activity activity) {
         this.list = list;
         this.items_owner = items_owner;
         this.items_quantity = items_quantity;
         this.items_uid = items_uid;
-        this.context = context;
         this.activity = activity;
     }
 
@@ -53,7 +52,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.listview_format, null);
         }
 
