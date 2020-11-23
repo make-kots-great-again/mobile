@@ -1,6 +1,7 @@
 package com.morgan.make_kots_great_again;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -79,6 +80,12 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             public void onClick(View v)
             {
                 addProductPopup popup = new addProductPopup(Page2.this);
+                popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        refresh_user_vue();
+                    }
+                });
                 popup.build();
             }
         });
@@ -153,5 +160,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         Intent intent = new Intent(this, Page3.class);
         startActivity(intent);
         finish();// Kills curent activity
+    }
+    protected void refresh_user_vue(){
+        ApiRequest apiRequest = new ApiRequest(Page2.this);
+        reset_arrayLists(items, items_owner, items_quantity, items_uid);
+        apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
     }
 }
