@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,6 +135,12 @@ public class ApiRequest {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = (ListView) activity.findViewById(R.id.listview);
             listview.setAdapter(new MyCustomAdapter(items, owner, quantity, uid, activity));
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(activity, "HE HE HE", Toast.LENGTH_SHORT).show();
+                }
+            });
         } catch (InterruptedException ignored) { }
     }
 

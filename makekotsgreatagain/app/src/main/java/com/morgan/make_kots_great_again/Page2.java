@@ -117,7 +117,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
         //Lors d'un choix de liste, requete GET avec le nom de liste pour choper les elements de cette liste
         current_list_selected = parent.getItemAtPosition(position).toString();
-        Log.d("SPINNER",current_list_selected);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
