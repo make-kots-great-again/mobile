@@ -39,7 +39,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private Spinner spinner;
     private ArrayAdapter<String> spinnerArrayAdapter;
     protected String current_list_selected;
-    protected ImageButton btn_refresh;
 
     protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
     protected final ArrayList<String> items = new ArrayList<>(); // items names
@@ -97,19 +96,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 launch_page3();
             }
         });
-
-        // A CHANGER !!!!!!!
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
-        btn_refresh = findViewById(R.id.button_refresh);
-        btn_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiRequest apiRequest = new ApiRequest(Page2.this);
-                reset_arrayLists(items, items_owner, items_quantity, items_uid);
-                apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
-            }
-        });
-        // ---------------------------------------------------------------------------------------------------------------------------------------------
     }
 
     // Dropdown menu with list "onChange functions"
