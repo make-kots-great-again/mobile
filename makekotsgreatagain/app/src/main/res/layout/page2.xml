@@ -78,4 +78,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/button_new_product" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
