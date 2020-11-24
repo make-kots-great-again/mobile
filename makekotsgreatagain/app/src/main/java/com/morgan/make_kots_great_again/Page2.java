@@ -144,16 +144,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private void launch_page3(){
         Intent intent = new Intent(this, Page3.class);
         startActivity(intent);
-        finish();// Kills curent activity
     }
     private void refresh_user_vue(){
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(items, items_owner, items_quantity, items_uid);
         apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
-    }
-    protected void refresh_user_vue2(ArrayList<String> items, ArrayList<String> owner, ArrayList<String> quantity, ArrayList<String> uid, String current_list_selected, Activity activity){
-        ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(items, owner, quantity, uid);
-        apiRequest.Get_Shopping_Lists_items(items, owner, quantity, uid, current_list_selected, activity);
     }
 }

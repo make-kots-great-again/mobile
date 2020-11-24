@@ -19,4 +19,9 @@
 
     <!--page QR-->
     <string name="qr_text"><b>Page QR</b></string>
+
+    <!--page n°3-->
+    <string name="page3_reserve1">Ne pas ajouter\n à la réserve</string>
+
+    <string name="page3_reserve2">Ajouter à\n la réserve</string>
 </resources>
