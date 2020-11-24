@@ -9,12 +9,9 @@ import java.util.ArrayList;
 
 public class Page3 extends AppCompatActivity {
 
-    private final ArrayList<String> product_name = new ArrayList<>();
-    private final ArrayList<String> product_owner = new ArrayList<>();
-    private final ArrayList<String> product_quantity = new ArrayList<>();
-    private final ArrayList<String> product_uid = new ArrayList<>();
-
     private String current_list_selected;
+
+    protected final ArrayList<Product> products = new ArrayList<>();
 
 
     @Override
@@ -26,6 +23,6 @@ public class Page3 extends AppCompatActivity {
         current_list_selected = pref.getString("list", null);
 
         ApiRequest apiRequest = new ApiRequest(Page3.this);
-        apiRequest.Get_items_page3(product_name, product_owner, product_quantity, product_uid, current_list_selected, Page3.this);
+        apiRequest.Get_items_page3(products, current_list_selected, Page3.this);
     }
 }

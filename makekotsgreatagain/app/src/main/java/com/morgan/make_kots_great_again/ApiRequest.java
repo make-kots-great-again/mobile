@@ -138,7 +138,7 @@ public class ApiRequest {
         } catch (InterruptedException ignored) { }
     }
 
-    protected void Get_items_page3(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity, final ArrayList<String> uid, final String selected_list, final Activity activity) {
+    protected void Get_items_page3(final ArrayList<Product> products, final String selected_list, final Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -160,10 +160,7 @@ public class ApiRequest {
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
                     JSONArray Jarray = Jobject2.getJSONArray(selected_list);
 
-                    items.clear();
-                    owner.clear();
-                    quantity.clear();
-                    uid.clear();
+                    products.clear();
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
@@ -174,16 +171,14 @@ public class ApiRequest {
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
 
-                        items.add(product_name);
-                        owner.add(product_owner);
-                        quantity.add(product_quantity);
-                        uid.add(product_uid);
+                        products.add(new Product(product_name, product_owner, product_quantity, product_uid));
 
+                        /*
                         // Permet de stocker l'ID du groupe dans une "shared preference"
                         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("group_id", group_id);
-                        editor.commit();
+                        editor.commit();*/
                     }
 
                 } catch (JSONException ignored) { }
@@ -191,8 +186,8 @@ public class ApiRequest {
         });
         try {
             TimeUnit.MILLISECONDS.sleep(500);
-            ListView listview2 = (ListView) activity.findViewById(R.id.listview2);
-            listview2.setAdapter(new MyCustomAdapter2(items, owner, quantity, uid, activity));
+            ListView listview2 = activity.findViewById(R.id.listview2);
+            listview2.setAdapter(new MyCustomAdapter2(products, activity));
         } catch (InterruptedException ignored) { }
     }
 

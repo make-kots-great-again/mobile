@@ -22,18 +22,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 
 public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
+
     private static Activity activity;
-    private ArrayList<String> list;
-    private ArrayList<String> items_owner;
-    private ArrayList<String> items_quantity;
-    private ArrayList<String> items_uid;
+    private ArrayList<Product> products;
     private String current_list_selected;
 
-    public MyCustomAdapter2(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity, ArrayList<String> items_uid, Activity activity) {
-        this.list = list;
-        this.items_owner = items_owner;
-        this.items_quantity = items_quantity;
-        this.items_uid = items_uid;
+    public MyCustomAdapter2(ArrayList<Product> products, Activity activity) {
+        this.products = products;
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
@@ -41,12 +36,12 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return products.size();
     }
 
     @Override
     public Object getItem(int pos) {
-        return list.get(pos);
+        return products.get(pos);
     }
 
     @Override
@@ -68,11 +63,11 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         final TextView listItemText = view.findViewById(R.id.product_name);
-        listItemText.setText(cutLongText(list.get(position)));
+        listItemText.setText(cutLongText(products.get(position).product_name));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.product_owner);
-        String current_text = items_owner.get(position);
+        String current_text = products.get(position).product_owner;
 
         listItemOwnerText.setText(current_text);
         if (current_text.equals("group")){
@@ -85,7 +80,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.product_quantity);
-        quantity.setText(items_quantity.get(position));
+        quantity.setText(products.get(position).product_quantity);
 
         //Constraint layout
         final ConstraintLayout constraintLayout = view.findViewById(R.id.constraint_layout);
