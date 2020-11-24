@@ -13,4 +13,8 @@ public class Product {
         this.product_quantity = quantity;
         this.product_uid = uid;
     }
+
+    public String getProduct_owner() {
+        return product_owner;
+    }
 }

@@ -71,9 +71,8 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         String current_text = items_owner.get(position);
 
         listItemOwnerText.setText(current_text);
-        if (current_text.equals("group")){
+        if (current_text.equals("GROUP")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
-            listItemOwnerText.setText(current_text.toUpperCase());
         }
         else if (current_text.equals("Me")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));

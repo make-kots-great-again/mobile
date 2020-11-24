@@ -20,6 +20,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
@@ -32,6 +34,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
+        Collections.sort(products, Comparator.comparing(Product::getProduct_owner));
     }
 
     @Override
@@ -70,9 +73,8 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         String current_text = products.get(position).product_owner;
 
         listItemOwnerText.setText(current_text);
-        if (current_text.equals("group")){
+        if (current_text.equals("GROUP")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
-            listItemOwnerText.setText(current_text.toUpperCase());
         }
         else if (current_text.equals("Me")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));

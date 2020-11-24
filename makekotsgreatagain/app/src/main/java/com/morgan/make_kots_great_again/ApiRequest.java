@@ -117,7 +117,12 @@ public class ApiRequest {
                         String group_id = object.getString("groupId");
 
                         items.add(product_name);
-                        owner.add(product_owner);
+                        if (product_owner.equals("group")){
+                            owner.add(product_owner.toUpperCase());
+                        }
+                        else {
+                            owner.add(product_owner);
+                        }
                         quantity.add(product_quantity);
                         uid.add(product_uid);
 
@@ -147,14 +152,14 @@ public class ApiRequest {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("GET", "Error");
+                Log.d("GET2", "Error");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
                 String responseBody = response.body().string();
-                Log.d("GET", "Ok");
+                Log.d("GET2", "Ok");
                 try {
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
@@ -167,11 +172,17 @@ public class ApiRequest {
                         String product_name = object.getString("product_name");
                         String product_owner = object.getString("username");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                        if (product_owner.equals("group")){ product_owner.toUpperCase(); }
                         String product_quantity = object.getString("quantity");
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
 
-                        products.add(new Product(product_name, product_owner, product_quantity, product_uid));
+                        if (product_owner.equals("group")){
+                            products.add(new Product(product_name, product_owner.toUpperCase(), product_quantity, product_uid));
+                        }
+                        else {
+                            products.add(new Product(product_name, product_owner, product_quantity, product_uid));
+                        }
 
                         /*
                         // Permet de stocker l'ID du groupe dans une "shared preference"
