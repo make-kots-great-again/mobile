@@ -171,6 +171,7 @@ public class ApiRequest {
                         JSONObject object = Jarray.getJSONObject(i);
                         String product_name = object.getString("product_name");
                         String product_owner = object.getString("username");
+                        String product_brand = object.getString("product_brand");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
                         if (product_owner.equals("group")){ product_owner.toUpperCase(); }
                         String product_quantity = object.getString("quantity");
@@ -178,10 +179,10 @@ public class ApiRequest {
                         String group_id = object.getString("groupId");
 
                         if (product_owner.equals("group")){
-                            products.add(new Product(product_name, product_owner.toUpperCase(), product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
                         }
                         else {
-                            products.add(new Product(product_name, product_owner, product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
                         }
 
                         /*

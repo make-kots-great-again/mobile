@@ -68,6 +68,10 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         final TextView listItemText = view.findViewById(R.id.product_name);
         listItemText.setText(cutLongText(products.get(position).product_name));
 
+        //Product BRAND
+        final TextView brand = view.findViewById(R.id.product_brand);
+        brand.setText(cutLongText(products.get(position).product_brand));
+
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.product_owner);
         String current_text = products.get(position).product_owner;
@@ -92,9 +96,11 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
                 checkBox.setChecked(!checkBox.isChecked());
                 if (checkBox.isChecked()){
                     listItemText.setPaintFlags(listItemText.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+                    brand.setPaintFlags(brand.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
                 }
                 else {
                     listItemText.setPaintFlags(listItemText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    brand.setPaintFlags(brand.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
             }
         });
