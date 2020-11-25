@@ -30,8 +30,8 @@ public class ApiRequest {
     String user;
     String shopping_list_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
 
-    public ApiRequest(Context context){
-        SharedPreferences pref = context.getSharedPreferences("MyPref", 0);
+    public ApiRequest(Activity activity){
+        SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         user = pref.getString("username", null);
         token = pref.getString("token", null);
     }
@@ -117,7 +117,12 @@ public class ApiRequest {
                         String group_id = object.getString("groupId");
 
                         items.add(product_name);
-                        owner.add(product_owner);
+                        if (product_owner.equals("group")){
+                            owner.add(product_owner.toUpperCase());
+                        }
+                        else {
+                            owner.add(product_owner);
+                        }
                         quantity.add(product_quantity);
                         uid.add(product_uid);
 
@@ -135,12 +140,66 @@ public class ApiRequest {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = (ListView) activity.findViewById(R.id.listview);
             listview.setAdapter(new MyCustomAdapter(items, owner, quantity, uid, activity));
-            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(activity, "HE HE HE", Toast.LENGTH_SHORT).show();
-                }
-            });
+        } catch (InterruptedException ignored) { }
+    }
+
+    protected void Get_items_page3(final ArrayList<Product> products, final String selected_list, final Activity activity) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        final Request request = new Request.Builder().header("Authorization", token).url(shopping_list_url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("GET2", "Error");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                String responseBody = response.body().string();
+                Log.d("GET2", "Ok");
+                try {
+                    JSONObject Jobject = new JSONObject(responseBody);
+                    JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
+                    JSONArray Jarray = Jobject2.getJSONArray(selected_list);
+
+                    products.clear();
+
+                    for(int i = 0; i < Jarray.length(); i++) {
+                        JSONObject object = Jarray.getJSONObject(i);
+                        String product_name = object.getString("product_name");
+                        String product_owner = object.getString("username");
+                        String product_brand = object.getString("product_brand");
+                        if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                        if (product_owner.equals("group")){ product_owner.toUpperCase(); }
+                        String product_quantity = object.getString("quantity");
+                        String product_uid = object.getString("shoppingListId");
+                        String group_id = object.getString("groupId");
+
+                        if (product_owner.equals("group")){
+                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
+                        }
+                        else {
+                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
+                        }
+
+                        /*
+                        // Permet de stocker l'ID du groupe dans une "shared preference"
+                        SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("group_id", group_id);
+                        editor.commit();*/
+                    }
+
+                } catch (JSONException ignored) { }
+            }
+        });
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+            ListView listview2 = activity.findViewById(R.id.listview2);
+            listview2.setAdapter(new MyCustomAdapter2(products, activity));
         } catch (InterruptedException ignored) { }
     }
 
