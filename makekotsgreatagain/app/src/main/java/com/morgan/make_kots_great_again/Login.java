@@ -132,27 +132,32 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    //-----------------------------------------------------------
-    // Function that destroy current activity and launch "Page2"
-    //-----------------------------------------------------------
+    /**
+     //-----------------------------------------------------------
+     // Function that destroy current activity and launch "Page2"
+     //-----------------------------------------------------------
+     */
     private void launch_page2(){
         Intent intent = new Intent(this, Page2.class);
         startActivity(intent);
         finish();// Kills curent activity
     }
 
-    //----------------------------------------------------------------------
-    // Function that launch "Page_QR" (without destroying previous activity
-    //----------------------------------------------------------------------
+    /**
+     //----------------------------------------------------------------------
+     // Function that launch "Page_QR" (without destroying previous activity
+     //----------------------------------------------------------------------
+     */
     private void launch_QR_scan_activity(){
         Intent intent = new Intent(this, Page_Qr.class);
         startActivity(intent);
     }
 
-    //---------------------------------------------------------
-    // Function that takes care of sending POST request to api
-    //---------------------------------------------------------
-
+    /**
+     //---------------------------------------------------------
+     // Function that takes care of sending POST request to api
+     //---------------------------------------------------------
+     */
     private void login_post_request() {
 
         String url = checkClass.connection_method(connection_type_local);
