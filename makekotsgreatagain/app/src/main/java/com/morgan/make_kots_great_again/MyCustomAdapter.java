@@ -20,19 +20,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
+
     private static Activity activity;
-    private ArrayList<String> list;
-    private ArrayList<String> items_owner;
-    private ArrayList<String> items_quantity;
-    private ArrayList<String> items_uid;
     private String current_list_selected;
+    private ArrayList<Product> products;
 
-
-    public MyCustomAdapter(ArrayList<String> list, ArrayList<String> items_owner, ArrayList<String> items_quantity, ArrayList<String> items_uid, Activity activity) {
-        this.list = list;
-        this.items_owner = items_owner;
-        this.items_quantity = items_quantity;
-        this.items_uid = items_uid;
+    public MyCustomAdapter(ArrayList<Product> products, Activity activity) {
+        this.products = products;
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
@@ -40,12 +34,12 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return products.size();
     }
 
     @Override
     public Object getItem(int pos) {
-        return list.get(pos);
+        return products.get(pos);
     }
 
     @Override
@@ -64,11 +58,11 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         TextView listItemText = view.findViewById(R.id.list_item_string);
-        listItemText.setText(cutLongText(list.get(position)));
+        listItemText.setText(cutLongText(products.get(position).product_name));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.list_item_owner_string);
-        String current_text = items_owner.get(position);
+        String current_text = products.get(position).product_owner;
 
         listItemOwnerText.setText(current_text);
         if (current_text.equals("GROUP")){
@@ -80,7 +74,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.quantity);
-        quantity.setText(items_quantity.get(position));
+        quantity.setText(products.get(position).product_quantity);
 
         //Image Buttons (Moins et Plus)
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
@@ -90,22 +84,21 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
             @Override
             public void onClick(View v) {
                 if (Integer.parseInt(quantity.getText().toString()) == 1){
-                    deleteProductPopup popup = new deleteProductPopup(activity, items_uid.get(position));
+                    deleteProductPopup popup = new deleteProductPopup(activity, products.get(position).product_uid);
                     popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             ApiRequest apiRequest = new ApiRequest(activity);
                             Page2 page2 = new Page2();
-                            list.clear(); items_owner.clear();
-                            items_quantity.clear(); items_uid.clear();
-                            apiRequest.Get_Shopping_Lists_items(list, items_owner, items_quantity, items_uid, current_list_selected, activity);
+                            products.clear();
+                            apiRequest.Get_Shopping_Lists_items(products, current_list_selected, activity);
                         }
                     });
                     popup.show();
                 }
 
-                else if (remove_one((String) quantity.getText(), items_uid.get(position)) != "error") {
-                    quantity.setText(remove_one((String) quantity.getText(), items_uid.get(position)));
+                else if (remove_one((String) quantity.getText(), products.get(position).product_uid) != "error") {
+                    quantity.setText(remove_one((String) quantity.getText(), products.get(position).product_uid));
 
 
                 }
@@ -160,6 +153,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
         return "error";
     }
+
     private static String cutLongText(String string){
         if (string.length() >=22){
             StringBuilder str = new StringBuilder(string);

@@ -80,7 +80,7 @@ public class ApiRequest {
      * @param selected_list
      * @param context
      */
-    protected void Get_Shopping_Lists_items(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity, final ArrayList<String> uid, final String selected_list, final Activity activity) {
+    protected void Get_Shopping_Lists_items(final ArrayList<Product> products, final String selected_list, final Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -102,29 +102,26 @@ public class ApiRequest {
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
                     JSONArray Jarray = Jobject2.getJSONArray(selected_list);
 
-                    items.clear();
-                    owner.clear();
-                    quantity.clear();
-                    uid.clear();
+                    products.clear();
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
+
                         String product_name = object.getString("product_name");
+                        String product_brand = object.getString("product_brand");
                         String product_owner = object.getString("username");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
                         String product_quantity = object.getString("quantity");
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
 
-                        items.add(product_name);
+
                         if (product_owner.equals("group")){
-                            owner.add(product_owner.toUpperCase());
+                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
                         }
                         else {
-                            owner.add(product_owner);
+                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
                         }
-                        quantity.add(product_quantity);
-                        uid.add(product_uid);
 
                         // Permet de stocker l'ID du groupe dans une "shared preference"
                         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
@@ -139,7 +136,7 @@ public class ApiRequest {
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = (ListView) activity.findViewById(R.id.listview);
-            listview.setAdapter(new MyCustomAdapter(items, owner, quantity, uid, activity));
+            listview.setAdapter(new MyCustomAdapter(products, activity));
         } catch (InterruptedException ignored) { }
     }
 
