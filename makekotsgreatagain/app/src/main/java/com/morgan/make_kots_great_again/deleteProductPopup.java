@@ -41,6 +41,8 @@ public class deleteProductPopup extends Dialog
         SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
         current_user_token = pref.getString("token", null);
 
+        ApiRequest apiRequest = new ApiRequest(activity);
+
         //Setup string's of the popup ----------------------------------------------
         this.text = "Souhaitez-vous supprimer ce produit de la liste ?";
         this.yesButtonText = "OUI";
@@ -57,7 +59,7 @@ public class deleteProductPopup extends Dialog
             public void onClick(View v)
             {
                 //Make a request API to delete the product and leave the popup
-                deleteProductRequest(activity, product_uid);
+                apiRequest.deleteProductRequest(activity, product_uid);
                 dismiss();
             }
         });
@@ -83,64 +85,4 @@ public class deleteProductPopup extends Dialog
         this.noButton.setText(noButtonText);
     }
 
-    /**
-     * Build and send a API request in order to delete a product
-     *
-     * The Unique ID of the product allows to know in which shoppingList it's located
-     *
-     * @param activity : activity calling the popup
-     * @param uidProduct : Unique ID of the product that we want to delete
-     */
-    public void deleteProductRequest(final Activity activity, String uidProduct)
-    {
-        String url = "https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/" + uidProduct;
-
-        Request request = new Request.Builder()
-                .header("Authorization", current_user_token)
-                .url(url)
-                .delete()
-                .build();
-
-        OkHttpClient client = new OkHttpClient();
-
-        client.newCall(request).enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e)
-            {/*Nothing*/}
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
-            {
-                String responseBody = response.body().string();
-
-                final JSONObject Jobject;
-
-                try
-                {
-                    Jobject = new JSONObject(responseBody);
-
-                    activity.runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            try
-                            {
-                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 }

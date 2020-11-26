@@ -50,8 +50,6 @@ public class addProductPopup extends Dialog {
     private ArrayList<String> products = new ArrayList<>();
     private Map<String, Integer> codes = new HashMap<>();
 
-    boolean requestSuccess = false;
-
     //CONSTRUCTOR
     public addProductPopup(final Activity activity)
     {
@@ -67,6 +65,8 @@ public class addProductPopup extends Dialog {
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
         this.search_bar_hint = "Rechercher un produit";
+
+        ApiRequest apiRequest = new ApiRequest(activity);
 
         //Setup search bar ----------------------------------------------------------------------
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, products);
@@ -84,7 +84,7 @@ public class addProductPopup extends Dialog {
             {
                 if(s.length() == search_bar.getThreshold())
                 {
-                    getProductsFromPattern((s.toString()));
+                    apiRequest.getProductsFromPattern(products, codes, s.toString());
                     refillAdapter();
                 }
             }
@@ -118,7 +118,7 @@ public class addProductPopup extends Dialog {
             @Override
             public void onClick(View v)
             {
-                addProductToList(activity);
+                apiRequest.addProductToList(activity, makeJson(), current_group_id);
                 dismiss();
             }
         });
@@ -146,106 +146,6 @@ public class addProductPopup extends Dialog {
         for(int i=0; i<products.size(); i++){
             adapter.add(products.get(i));
         }
-    }
-
-    /*
-    * Make an API request to get a list of product that contains the pattern
-    *
-    * @param patter : current text written in the AutoCompleteTextView
-    * */
-    public void getProductsFromPattern(String pattern)
-    {
-        String url = "https://kotsapp.herokuapp.com/server/api/products/" + pattern;
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder().header("Authorization", current_user_token ).url(url).build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {}
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseBody = response.body().string();
-                try {
-                    JSONObject Jobject = new JSONObject(responseBody);
-                    JSONArray Jarray = Jobject.getJSONArray("products");
-
-                    products.clear();
-
-                    for(int i = 0; i < Jarray.length(); i++) {
-                        JSONObject object = Jarray.getJSONObject(i);
-                        String product_name = object.getString("product_name");
-                        String product_code = object.getString("code");
-
-                        products.add(product_name);
-
-                        codes.put(product_name, Integer.parseInt(product_code));
-                    }
-
-                } catch (JSONException ignored) { }
-            }
-        });
-    }
-
-    /*
-    * Function called when the user press the "add" button
-    * Display the response message when we get it
-    */
-    public void addProductToList(final Activity activity)
-    {
-        JSONObject json = makeJson();
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .header("Authorization", current_user_token)
-                .url("https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id)
-                .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
-                .build();
-
-        client.newCall(request).enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(Call call, IOException e)
-            {/*Nothing*/}
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
-                try
-                {
-                    String responseBody = response.body().string();
-
-                    final JSONObject Jobject = new JSONObject(responseBody);
-
-                    activity.runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            try
-                            {
-                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                    if(Jobject.getString("success").equals("true")){
-                        requestSuccess = true;
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     /*

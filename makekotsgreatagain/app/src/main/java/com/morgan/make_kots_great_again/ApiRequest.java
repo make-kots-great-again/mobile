@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,18 +17,22 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ApiRequest {
 
     String token;
     String user;
+    String current_group_id;
     String shopping_list_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
 
     public ApiRequest(Activity activity){
@@ -200,4 +205,166 @@ public class ApiRequest {
         } catch (InterruptedException ignored) { }
     }
 
+    /**
+     * Make an API request to get a list of product that contains the pattern
+     *
+     * @param db_products
+     * @param products_codes
+     * @param pattern
+     */
+    public void getProductsFromPattern(final ArrayList<String> db_products, final Map<String, Integer> products_codes, String pattern)
+    {
+        String url = "https://kotsapp.herokuapp.com/server/api/products/" + pattern;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder().header("Authorization", token).url(url).build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body().string();
+                try {
+                    JSONObject Jobject = new JSONObject(responseBody);
+                    JSONArray Jarray = Jobject.getJSONArray("products");
+
+                    db_products.clear();
+
+                    for(int i = 0; i < Jarray.length(); i++) {
+                        JSONObject object = Jarray.getJSONObject(i);
+                        String product_name = object.getString("product_name");
+                        String product_code = object.getString("code");
+
+                        db_products.add(product_name);
+
+                        products_codes.put(product_name, Integer.parseInt(product_code));
+                    }
+
+                } catch (JSONException ignored) { }
+            }
+        });
+    }
+
+    /**
+     * Function called when the user press the "add" button
+     * Display the response message when we get it
+     *
+     * @param activity
+     * @param requestBody
+     * @param current_group_id
+     */
+    public void addProductToList(final Activity activity, JSONObject requestBody, String current_group_id)
+    {
+        JSONObject json = requestBody;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url("https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id)
+                .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
+                .build();
+
+        client.newCall(request).enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {/*Nothing*/}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                try
+                {
+                    String responseBody = response.body().string();
+
+                    final JSONObject Jobject = new JSONObject(responseBody);
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            catch(Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Build and send a API request in order to delete a product
+     *
+     * The Unique ID of the product allows to know in which shoppingList it's located
+     *
+     * @param activity : activity calling the popup
+     * @param uidProduct : Unique ID of the product that we want to delete
+     */
+    public void deleteProductRequest(final Activity activity, String uidProduct)
+    {
+        String url = shopping_list_url + "removeProduct/" + uidProduct;
+
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .delete()
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+
+        client.newCall(request).enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e)
+            {/*Nothing*/}
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
+            {
+                String responseBody = response.body().string();
+
+                final JSONObject Jobject;
+
+                try
+                {
+                    Jobject = new JSONObject(responseBody);
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }
