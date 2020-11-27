@@ -118,7 +118,7 @@ public class ApiRequest {
                         String product_brand = object.getString("product_brand");
                         String product_owner = object.getString("username");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
-                        String product_quantity = object.getString("quantity");
+                        int product_quantity = Integer.parseInt(object.getString("quantity"));
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
 
@@ -180,7 +180,7 @@ public class ApiRequest {
                         String product_brand = object.getString("product_brand");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
                         if (product_owner.equals("group")){ product_owner.toUpperCase(); }
-                        String product_quantity = object.getString("quantity");
+                        int product_quantity = Integer.parseInt(object.getString("quantity"));
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
 

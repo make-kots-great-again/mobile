@@ -5,10 +5,10 @@ public class Product {
     String product_name;
     String product_brand;
     String product_owner;
-    String product_quantity;
+    int product_quantity;
     String product_uid;
 
-    public Product(String name, String brand, String owner, String quantity, String uid){
+    public Product(String name, String brand, String owner, int quantity, String uid){
         this.product_name = name;
         this.product_brand = brand;
         this.product_owner = owner;
@@ -19,4 +19,8 @@ public class Product {
     public String getProduct_owner() {
         return product_owner;
     }
+
+    public void reduce_quantity() { this.product_quantity--; }
+
+    public void add_quantity() { this.product_quantity++; }
 }

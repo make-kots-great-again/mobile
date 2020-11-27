@@ -76,7 +76,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.quantity);
-        quantity.setText(products.get(position).product_quantity);
+        quantity.setText(Integer.toString(products.get(position).product_quantity));
 
         //Image Buttons (Moins et Plus)
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
@@ -110,9 +110,8 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
                 else if (remove_one((String) quantity.getText(), products.get(position).product_uid) != "error")
                 {
                     quantity.setText(remove_one((String) quantity.getText(), products.get(position).product_uid));
+                    products_modified.get(position).reduce_quantity();
                 }
-
-                displayarraylist();
             }
         });
 
@@ -121,12 +120,11 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
             @Override
             public void onClick(View v)
             {
-                if (add_one((String) quantity.getText()) != "error")
+                if (add_one((String) quantity.getText(), products_modified.get(position)) != "error")
                 {
-                    quantity.setText(add_one((String) quantity.getText()));
+                    quantity.setText(add_one((String) quantity.getText(), products_modified.get(position)));
+                    products_modified.get(position).add_quantity();
                 }
-
-                displayarraylist();
             }
         });
 
@@ -156,7 +154,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
      *  @return (String) => Returns number+1 in form of a String */
 
-    private static String add_one(String number_in_string){
+    private static String add_one(String number_in_string, Product product_to_modified){
         int number = Integer.parseInt(number_in_string);
         if (number >=1 && number <20){
             return Integer.toString(number + 1);
@@ -175,14 +173,4 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
     }
 
-    //For test purposes
-    private void displayarraylist(){
-        for(int i=0; i<products.size(); i++){
-            Log.d("products", products.get(i).product_name + ", " + products.get(i).product_quantity);
-        }
-
-        for(int i=0; i<products_modified.size(); i++){
-            Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
-        }
-    }
 }
