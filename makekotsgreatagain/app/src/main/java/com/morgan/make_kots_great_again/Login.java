@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 ApiRequest apiRequest = new ApiRequest(Login.this);
                 // Checks if the user is connected to internet
-                if (isConnectedToInternet()) {
+                if (isConnectedToInternet(Login.this)) {
                     apiRequest.login_post_request(username, password);
                 }
             }
@@ -104,12 +104,12 @@ public class Login extends AppCompatActivity {
      //-----------------------------------------------------------
      * @return
      */
-    private boolean isConnectedToInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+    protected boolean isConnectedToInternet(Activity activity) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         boolean result = networkInfo != null && networkInfo.isConnected();
         if (!result){
-            Toast.makeText(this, "⚠️ No internet connection !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "⚠️ No internet connection !", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
