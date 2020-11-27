@@ -106,7 +106,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
                     listItemText.setPaintFlags(listItemText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     brand.setPaintFlags(brand.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
-                String snackbar_text = "he he he";
+                String snackbar_text = products.get(position).product_brand;
                 Snackbar snackbar = Snackbar.make(constraintLayout, snackbar_text, Snackbar.LENGTH_SHORT);
 
                 View view = snackbar.getView();
