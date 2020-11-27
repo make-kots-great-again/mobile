@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     protected String current_list_selected;
     protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
     protected final ArrayList<Product> products = new ArrayList<>();
+    protected final ArrayList<Product> products_modified = new ArrayList<>(); // copy of products, used to know if quantities have been modified
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         btn_mode_achat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                * if(qtyhavebeenchanged) {updatedb}
+                *
+                *
+                * */
                 launch_page3();
             }
         });
@@ -89,8 +96,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         editor.commit();
 
         ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(products);
-        apiRequest.Get_Shopping_Lists_items(products, current_list_selected, Page2.this);
+        reset_arrayLists(products, products_modified);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
     }
 
     @Override
@@ -110,8 +117,9 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
      * @param quantity
      * @param uid
      */
-    private void reset_arrayLists(final ArrayList<Product> products){
+    private void reset_arrayLists(final ArrayList<Product> products, final ArrayList<Product> products_modified){
         products.clear();
+        products_modified.clear();
     }
 
     /**
@@ -126,7 +134,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
     private void refresh_user_vue(){
         ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(products);
-        apiRequest.Get_Shopping_Lists_items(products, current_list_selected, Page2.this);
+        reset_arrayLists(products, products_modified);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
     }
+
 }

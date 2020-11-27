@@ -23,10 +23,12 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     private static Activity activity;
     private String current_list_selected;
-    private ArrayList<Product> products;
+    private ArrayList<Product> products =  new ArrayList<Product>();
+    private ArrayList<Product> products_modified = new ArrayList<Product>();
 
-    public MyCustomAdapter(ArrayList<Product> products, Activity activity) {
+    public MyCustomAdapter(ArrayList<Product> products, ArrayList<Product> products_modified, Activity activity) {
         this.products = products;
+        this.products_modified = products_modified;
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
@@ -80,38 +82,51 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
         ImageButton addBtn = view.findViewById(R.id.add_btn);
 
-        deleteBtn.setOnClickListener(new View.OnClickListener(){
+        deleteBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if (Integer.parseInt(quantity.getText().toString()) == 1){
+            public void onClick(View v)
+            {
+                if (Integer.parseInt(quantity.getText().toString()) == 1)
+                {
                     deleteProductPopup popup = new deleteProductPopup(activity, products.get(position).product_uid);
-                    popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    popup.setOnDismissListener(new DialogInterface.OnDismissListener()
+                    {
                         @Override
-                        public void onDismiss(DialogInterface dialog) {
+                        public void onDismiss(DialogInterface dialog)
+                        {
                             ApiRequest apiRequest = new ApiRequest(activity);
                             Page2 page2 = new Page2();
+
                             products.clear();
-                            apiRequest.Get_Shopping_Lists_items(products, current_list_selected, activity);
+                            apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, activity);
                         }
                     });
+
                     popup.show();
                 }
 
-                else if (remove_one((String) quantity.getText(), products.get(position).product_uid) != "error") {
+                else if (remove_one((String) quantity.getText(), products.get(position).product_uid) != "error")
+                {
                     quantity.setText(remove_one((String) quantity.getText(), products.get(position).product_uid));
-
-
                 }
 
-
+                displayarraylist();
             }
         });
-        addBtn.setOnClickListener(new View.OnClickListener(){
+
+        addBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if (add_one((String) quantity.getText()) != "error"){
+            public void onClick(View v)
+            {
+                if (add_one((String) quantity.getText()) != "error")
+                {
                     quantity.setText(add_one((String) quantity.getText()));
                 }
+
+                displayarraylist();
             }
         });
 
@@ -130,11 +145,6 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         if (number >=2 && number <=20){
             return Integer.toString(number - 1);
         }
-        /*
-        if(number == 1){
-            deleteProductPopup popup = new deleteProductPopup(activity, uid);
-            popup.show();
-        }*/
 
         return "error";
     }
@@ -162,6 +172,17 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         }
         else { // String is not bigger than or equal to 20
             return string;
+        }
+    }
+
+    //For test purposes
+    private void displayarraylist(){
+        for(int i=0; i<products.size(); i++){
+            Log.d("products", products.get(i).product_name + ", " + products.get(i).product_quantity);
+        }
+
+        for(int i=0; i<products_modified.size(); i++){
+            Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
         }
     }
 }

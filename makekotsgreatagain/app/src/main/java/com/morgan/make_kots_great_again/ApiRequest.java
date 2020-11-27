@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -85,7 +86,7 @@ public class ApiRequest {
      * @param selected_list
      * @param context
      */
-    protected void Get_Shopping_Lists_items(final ArrayList<Product> products, final String selected_list, final Activity activity) {
+    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, final String selected_list, final Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -108,6 +109,7 @@ public class ApiRequest {
                     JSONArray Jarray = Jobject2.getJSONArray(selected_list);
 
                     products.clear();
+                    products_modified.clear();
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
@@ -123,9 +125,11 @@ public class ApiRequest {
 
                         if (product_owner.equals("group")){
                             products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
+                            products_modified.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
                         }
                         else {
                             products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
+                            products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
                         }
 
                         // Permet de stocker l'ID du groupe dans une "shared preference"
@@ -141,7 +145,7 @@ public class ApiRequest {
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = (ListView) activity.findViewById(R.id.listview);
-            listview.setAdapter(new MyCustomAdapter(products, activity));
+            listview.setAdapter(new MyCustomAdapter(products, products_modified, activity));
         } catch (InterruptedException ignored) { }
     }
 
