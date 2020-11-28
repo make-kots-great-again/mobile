@@ -377,21 +377,27 @@ public class ApiRequest {
      *
      * @param uidProduct
      */
-    public void updateProductRequest(String uidProduct)
-    {
-        /**
-         * TODO
-         * 1. Question sur la requete => comment on précise la nouvelle quantité (body?) ?
-         * 2. Gérer la réponse
-         */
+    public void updateProductRequest(Activity activity, String uidProduct, int new_Quantity) {
+        Log.d("uid", uidProduct);
+        Log.d("newQty", String.valueOf(new_Quantity));
 
         String url = shopping_list_url + "updateQuantity/" + uidProduct;
 
-        RequestBody body = null;
+        JSONObject body = new JSONObject();
+        try
+        {
+            body.put("quantity", new_Quantity);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        Log.d("body", body.toString());
 
         Request request = new Request.Builder().header("Authorization", token)
                 .url(url)
-                .patch(body)
+                .patch(RequestBody.create(MediaType.parse("application/json"), String.valueOf(body)))
                 .build();
 
         OkHttpClient client = new OkHttpClient();
@@ -404,7 +410,36 @@ public class ApiRequest {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
-            {}
+            {
+                String responseBody = response.body().string();
+
+                final JSONObject Jobject;
+
+                try
+                {
+                    Jobject = new JSONObject(responseBody);
+
+                    activity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 }

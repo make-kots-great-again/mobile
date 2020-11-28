@@ -78,10 +78,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             {
                 if(quantitiesHaveBeenChanged(products, products_modified))
                 {
-                    sendUpdateRequests(products, products_modified, apiRequest);
+                    getModifiedQuantities(products, products_modified, apiRequest);
                 }
 
-                //launch_page3();
+                launch_page3();
             }
         });
     }
@@ -170,7 +170,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
      * @param products_modified
      * @param apiRequest
      */
-    public void sendUpdateRequests(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest)
+    public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest)
     {
         for(int i = 0; i<products.size(); i++)
         {
@@ -178,21 +178,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             {
                 Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
 
-                // will probably have to setup a timeout between each loop
-                //apiRequest.updateProductRequest(products.get(i).product_uid);
+                apiRequest.updateProductRequest(Page2.this, products.get(i).product_uid, products_modified.get(i).product_quantity);
             }
         }
     }
-
-    //For test purposes
-    private void displayarraylist(){
-        for(int i=0; i<products.size(); i++){
-            Log.d("products", products.get(i).product_name + ", " + products.get(i).product_quantity);
-        }
-
-        for(int i=0; i<products_modified.size(); i++){
-            Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
-        }
-    }
-
 }
