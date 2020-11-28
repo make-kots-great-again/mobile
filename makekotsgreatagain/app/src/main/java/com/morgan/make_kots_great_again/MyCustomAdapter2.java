@@ -90,7 +90,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.product_quantity);
-        quantity.setText(products.get(position).product_quantity);
+        quantity.setText(Integer.toString(products.get(position).product_quantity));
 
         //Constraint layout
         final ConstraintLayout constraintLayout = view.findViewById(R.id.constraint_layout);

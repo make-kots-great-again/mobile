@@ -1,6 +1,5 @@
 package com.morgan.make_kots_great_again;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,40 +10,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner spinner;
     private ArrayAdapter<String> spinnerArrayAdapter;
     protected String current_list_selected;
-
     protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
-    protected final ArrayList<String> items = new ArrayList<>(); // items names
-    protected final ArrayList<String> items_owner = new ArrayList<>();
-    protected final ArrayList<String> items_quantity = new ArrayList<>();
-    protected final ArrayList<String> items_uid = new ArrayList<>();
+    protected final ArrayList<Product> products = new ArrayList<>();
+    protected final ArrayList<Product> products_modified = new ArrayList<>(); // copy of products, used to know if quantities have been modified
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +72,16 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         });
 
         Button btn_mode_achat = findViewById(R.id.button_mode_achat);
-        btn_mode_achat.setOnClickListener(new View.OnClickListener() {
+        btn_mode_achat.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                if(quantitiesHaveBeenChanged(products, products_modified))
+                {
+                    getModifiedQuantities(products, products_modified, apiRequest);
+                }
+
                 launch_page3();
             }
         });
@@ -110,8 +99,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         editor.commit();
 
         ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(items, items_owner, items_quantity, items_uid);
-        apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
+        reset_arrayLists(products, products_modified);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
     }
 
     @Override
@@ -131,9 +120,9 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
      * @param quantity
      * @param uid
      */
-    private void reset_arrayLists(final ArrayList<String> items, final ArrayList<String> owner, final ArrayList<String> quantity, final ArrayList<String> uid){
-        items.clear(); owner.clear();
-        quantity.clear(); uid.clear();
+    private void reset_arrayLists(final ArrayList<Product> products, final ArrayList<Product> products_modified){
+        products.clear();
+        products_modified.clear();
     }
 
     /**
@@ -145,9 +134,53 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         Intent intent = new Intent(this, Page3.class);
         startActivity(intent);
     }
+
     private void refresh_user_vue(){
         ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(items, items_owner, items_quantity, items_uid);
-        apiRequest.Get_Shopping_Lists_items(items, items_owner, items_quantity, items_uid, current_list_selected, Page2.this);
+        reset_arrayLists(products, products_modified);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
+    }
+
+    /**
+     * Compare both Arraylists (products & products_modified) in ordre to detect if we have modified the quantities
+     *
+     * @param products
+     * @param products_modified
+     * @return true if any quantity has been changed or false if nothing has been changed
+     */
+    public boolean quantitiesHaveBeenChanged(final ArrayList<Product> products, final ArrayList<Product> products_modified)
+    {
+        boolean qty_changed = false;
+
+        for(int i = 0; i<products.size(); i++)
+        {
+            if(!products.get(i).equals(products_modified.get(i)))
+            {
+                qty_changed = true;
+                break;
+            }
+        }
+
+        return qty_changed;
+    }
+
+    /**
+     * Loop on the Arraylists to find which products quantities have been modified
+     *
+     * @param products
+     * @param products_modified
+     * @param apiRequest
+     */
+    public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest)
+    {
+        for(int i = 0; i<products.size(); i++)
+        {
+            if(!products.get(i).equals(products_modified.get(i)))
+            {
+                Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
+
+                apiRequest.updateProductRequest(Page2.this, products.get(i).product_uid, products_modified.get(i).product_quantity);
+            }
+        }
     }
 }
