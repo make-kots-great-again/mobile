@@ -372,6 +372,11 @@ public class ApiRequest {
         });
     }
 
+    /**
+     *  Send an API Request which update the quantity of to product specified in parameter
+     *
+     * @param uidProduct
+     */
     public void updateProductRequest(String uidProduct)
     {
         /**

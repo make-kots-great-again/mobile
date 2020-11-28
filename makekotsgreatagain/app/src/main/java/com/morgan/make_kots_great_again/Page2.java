@@ -71,14 +71,17 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         });
 
         Button btn_mode_achat = findViewById(R.id.button_mode_achat);
-        btn_mode_achat.setOnClickListener(new View.OnClickListener() {
+        btn_mode_achat.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(quantitiesHaveBeenChanged(products, products_modified)){
-                    displayarraylist();
+            public void onClick(View v)
+            {
+                if(quantitiesHaveBeenChanged(products, products_modified))
+                {
+                    sendUpdateRequests(products, products_modified, apiRequest);
                 }
 
-                launch_page3();
+                //launch_page3();
             }
         });
     }
@@ -137,6 +140,13 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
     }
 
+    /**
+     * Compare both Arraylists (products & products_modified) in ordre to detect if we have modified the quantities
+     *
+     * @param products
+     * @param products_modified
+     * @return true if any quantity has been changed or false if nothing has been changed
+     */
     public boolean quantitiesHaveBeenChanged(final ArrayList<Product> products, final ArrayList<Product> products_modified)
     {
         boolean qty_changed = false;
@@ -151,6 +161,27 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         }
 
         return qty_changed;
+    }
+
+    /**
+     * Loop on the Arraylists to find which products quantities have been modified
+     *
+     * @param products
+     * @param products_modified
+     * @param apiRequest
+     */
+    public void sendUpdateRequests(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest)
+    {
+        for(int i = 0; i<products.size(); i++)
+        {
+            if(!products.get(i).equals(products_modified.get(i)))
+            {
+                Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
+
+                // will probably have to setup a timeout between each loop
+                //apiRequest.updateProductRequest(products.get(i).product_uid);
+            }
+        }
     }
 
     //For test purposes
