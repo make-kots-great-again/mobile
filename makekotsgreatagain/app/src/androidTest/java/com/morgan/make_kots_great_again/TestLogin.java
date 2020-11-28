@@ -26,13 +26,16 @@ public class TestLogin {
     @Rule
     public ActivityScenarioRule<Login> activityRule = new ActivityScenarioRule<>(Login.class);
 
+    //Test de la fonction "isConnectedToInternet()" permettant de savoir si un utilisateur à accès à internet.
     @Test
-    public void test_isHostUp(){
+    public void test_isConnectedToInternet(){
         activityRule.getScenario().onActivity(activity -> {
             Login login = new Login();
             login.isConnectedToInternet(activity);
         });
     }
+
+    //Test de la fonction "launch_page2()" permettant d'accéder à la page2.
     @Test
     public void test_launch_page2(){
         activityRule.getScenario().onActivity(activity -> {

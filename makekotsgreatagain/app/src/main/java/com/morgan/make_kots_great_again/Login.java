@@ -91,6 +91,7 @@ public class Login extends AppCompatActivity {
      //-----------------------------------------------------------
      // Function that destroy current activity and launch "Page2"
      //-----------------------------------------------------------
+     * @param activity
      */
     protected void launch_page2(Activity activity){
         Intent intent = new Intent(activity, Page2.class);
@@ -102,7 +103,8 @@ public class Login extends AppCompatActivity {
      //-----------------------------------------------------------
      // Function that checks if user is connected to internet
      //-----------------------------------------------------------
-     * @return
+     * @param activity
+     * @return (boolean) true if user is connected, false otherwise
      */
     protected boolean isConnectedToInternet(Activity activity) {
         ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
