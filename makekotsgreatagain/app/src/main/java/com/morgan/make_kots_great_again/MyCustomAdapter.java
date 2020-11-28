@@ -107,9 +107,9 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
                     popup.show();
                 }
 
-                else if (remove_one((String) quantity.getText(), products.get(position).product_uid) != "error")
+                else if (remove_one((String) quantity.getText()) != "error")
                 {
-                    quantity.setText(remove_one((String) quantity.getText(), products.get(position).product_uid));
+                    quantity.setText(remove_one((String) quantity.getText()));
                     products_modified.get(position).reduce_quantity();
                 }
             }
@@ -120,9 +120,9 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
             @Override
             public void onClick(View v)
             {
-                if (add_one((String) quantity.getText(), products_modified.get(position)) != "error")
+                if (add_one((String) quantity.getText()) != "error")
                 {
-                    quantity.setText(add_one((String) quantity.getText(), products_modified.get(position)));
+                    quantity.setText(add_one((String) quantity.getText()));
                     products_modified.get(position).add_quantity();
                 }
             }
@@ -138,7 +138,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
     *  @return (String) => Returns number-1 in form of a String */
 
-    private static String remove_one(String number_in_string, String uid){
+    private static String remove_one(String number_in_string){
         int number = Integer.parseInt(number_in_string);
         if (number >=2 && number <=20){
             return Integer.toString(number - 1);
@@ -154,7 +154,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
     /* @param (String) => Takes a String that represents a number
      *  @return (String) => Returns number+1 in form of a String */
 
-    private static String add_one(String number_in_string, Product product_to_modified){
+    private static String add_one(String number_in_string){
         int number = Integer.parseInt(number_in_string);
         if (number >=1 && number <20){
             return Integer.toString(number + 1);
