@@ -371,4 +371,35 @@ public class ApiRequest {
             }
         });
     }
+
+    public void updateProductRequest(String uidProduct)
+    {
+        /**
+         * TODO
+         * 1. Question sur la requete => comment on précise la nouvelle quantité (body?) ?
+         * 2. Gérer la réponse
+         */
+
+        String url = shopping_list_url + "updateQuantity/" + uidProduct;
+
+        RequestBody body = null;
+
+        Request request = new Request.Builder().header("Authorization", token)
+                .url(url)
+                .patch(body)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+
+        client.newCall(request).enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e)
+            {}
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
+            {}
+        });
+    }
 }

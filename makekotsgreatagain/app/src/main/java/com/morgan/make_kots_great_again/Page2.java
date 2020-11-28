@@ -74,7 +74,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         btn_mode_achat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayarraylist();
+                if(quantitiesHaveBeenChanged(products, products_modified)){
+                    displayarraylist();
+                }
+
                 launch_page3();
             }
         });
@@ -132,6 +135,22 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
         apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
+    }
+
+    public boolean quantitiesHaveBeenChanged(final ArrayList<Product> products, final ArrayList<Product> products_modified)
+    {
+        boolean qty_changed = false;
+
+        for(int i = 0; i<products.size(); i++)
+        {
+            if(!products.get(i).equals(products_modified.get(i)))
+            {
+                qty_changed = true;
+                break;
+            }
+        }
+
+        return qty_changed;
     }
 
     //For test purposes
