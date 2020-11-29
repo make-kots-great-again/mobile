@@ -17,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -106,14 +105,16 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
                     listItemText.setPaintFlags(listItemText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     brand.setPaintFlags(brand.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
-                String snackbar_text = products.get(position).product_brand;
-                Snackbar snackbar = Snackbar.make(constraintLayout, snackbar_text, Snackbar.LENGTH_SHORT);
+                String snackbar_text = products.get(position).product_note;
+                if (!snackbar_text.equals("null")){
+                    Snackbar snackbar = Snackbar.make(constraintLayout, snackbar_text, Snackbar.LENGTH_SHORT);
 
-                View view = snackbar.getView();
-                TextView tv = view.findViewById(com.google.android.material.R.id.snackbar_text);
-                tv.setTextColor(Color.MAGENTA);
+                    View view = snackbar.getView();
+                    TextView tv = view.findViewById(com.google.android.material.R.id.snackbar_text);
+                    tv.setTextColor(Color.MAGENTA);
 
-                snackbar.show();
+                    snackbar.show();
+                }
             }
         });
 

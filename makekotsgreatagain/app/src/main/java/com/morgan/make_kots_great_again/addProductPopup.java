@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,6 +42,7 @@ public class addProductPopup extends Dialog {
     private RadioButton groupeRadio, meRadio;
     private TextView quantity, owner;
     private Button add_btn;
+    private EditText input_note;
 
     private String qty, own, search_bar_hint;
     private String current_user_name, current_user_token, current_group_id, current_list_selected;
@@ -110,16 +112,21 @@ public class addProductPopup extends Dialog {
         this.meRadio = findViewById(R.id.btn_owner);
         this.meRadio.setChecked(true);
         this.groupeRadio = findViewById(R.id.btn_group);
+        // Setup UI zone for product note
+        this.input_note = findViewById(R.id.edit_note);
 
         //Setup Add Button ---------------------------------------------------------------------
         this.add_btn = findViewById(R.id.add_btn);
-        add_btn.setOnClickListener(new View.OnClickListener()
-        {
+        add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                apiRequest.addProductToList(activity, makeJson(), current_group_id);
-                dismiss();
+            public void onClick(View v) {
+                if (input_note.getText().length() >= 55){
+                    Toast.makeText(activity, "⚠️ Product note is too long !", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    apiRequest.addProductToList(activity, makeJson(), current_group_id);
+                    dismiss();
+                }
             }
         });
     }
@@ -159,6 +166,7 @@ public class addProductPopup extends Dialog {
         {
             json.put("code", codes.get(search_bar.getText().toString()));
             json.put("quantity", nb_picker.getValue());
+            json.put("productNote", input_note.getText());
 
             if(groupeRadio.isChecked())
             {

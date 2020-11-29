@@ -182,15 +182,16 @@ public class ApiRequest {
                         int product_quantity = Integer.parseInt(object.getString("quantity"));
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
+                        String product_note = object.getString("product_note");
 
 
                         if (product_owner.equals("group")){
-                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
-                            products_modified.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
+                            products_modified.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
                         }
                         else {
-                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
-                            products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
+                            products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
 
                         // Permet de stocker l'ID du groupe dans une "shared preference"
@@ -253,12 +254,13 @@ public class ApiRequest {
                         int product_quantity = Integer.parseInt(object.getString("quantity"));
                         String product_uid = object.getString("shoppingListId");
                         String group_id = object.getString("groupId");
+                        String product_note = object.getString("product_note");
 
                         if (product_owner.equals("group")){
-                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
                         }
                         else {
-                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid));
+                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
                     }
 
