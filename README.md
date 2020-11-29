@@ -8,8 +8,8 @@ Target audience | IDE | Language
 
 ### Release
 
-* Version ***1.0*** : [Make-kots-great-again.apk](https://github.com/make-kots-great-again/mobile/blob/master/release/make-kots-great-again_v1.apk)
-* Version ***2.0*** : [Make-kots-great-again.apk](https://github.com/make-kots-great-again/mobile/blob/master/release/make-kots-great-again_v2.apk)
+* Version ***1.0*** : [Make-kots-great-again_v1.apk](https://github.com/make-kots-great-again/mobile/blob/master/release/make-kots-great-again_v1.apk)
+* Version ***2.0*** : [Make-kots-great-again_v2.apk](https://github.com/make-kots-great-again/mobile/blob/master/release/make-kots-great-again_v2.apk)
 
 ---
 
