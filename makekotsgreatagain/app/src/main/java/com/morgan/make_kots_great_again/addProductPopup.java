@@ -166,8 +166,12 @@ public class addProductPopup extends Dialog {
         {
             json.put("code", codes.get(search_bar.getText().toString()));
             json.put("quantity", nb_picker.getValue());
-            json.put("productNote", input_note.getText());
-
+            if (input_note.getText().length() == 0){
+                json.put("productNote", "null");
+            }
+            else {
+                json.put("productNote", input_note.getText());
+            }
             if(groupeRadio.isChecked())
             {
                 json.put("groupProduct", true);
