@@ -71,8 +71,7 @@ public class Page3 extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                //will have to send an API request
-                Toast.makeText(getApplicationContext(), "delete list", Toast.LENGTH_SHORT).show();
+                wipeList();
             }
         });
 
@@ -99,6 +98,16 @@ public class Page3 extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void wipeList()
+    {
+        ApiRequest apiRequest = new ApiRequest(Page3.this);
+
+        for(int i=0; i<products.size(); i++)
+        {
+            apiRequest.deleteProductRequest(Page3.this, products.get(i).product_uid);
+        }
     }
 
 }
