@@ -267,11 +267,6 @@ public class ApiRequest {
                 } catch (JSONException ignored) { }
             }
         });
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-            ListView listview2 = activity.findViewById(R.id.listview2);
-            listview2.setAdapter(new MyCustomAdapter2(products, activity));
-        } catch (InterruptedException ignored) { }
     }
 
     /**
