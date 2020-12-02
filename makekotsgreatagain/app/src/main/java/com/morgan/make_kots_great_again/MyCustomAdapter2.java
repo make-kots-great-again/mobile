@@ -65,7 +65,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         }
 
         //Checkbox
-        final CheckBox checkBox = view.findViewById(R.id.product_checkbox);
+        CheckBox checkBox = view.findViewById(R.id.product_checkbox);
 
         //Product NAME
         final TextView listItemText = view.findViewById(R.id.product_name);

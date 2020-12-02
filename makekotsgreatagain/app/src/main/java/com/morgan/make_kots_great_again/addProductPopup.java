@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -104,7 +105,7 @@ public class addProductPopup extends Dialog {
         // Setup UI zone for owner selection ---------------------------------------------------
         this.owner = findViewById(R.id.text_owner);
         this.radioGroup = findViewById(R.id.radio_group);
-        if(current_list_selected.contains("personal list"))
+        if(current_list_selected.contains("perso"))
         {
             this.owner.setVisibility(View.INVISIBLE);
             this.radioGroup.setVisibility(View.INVISIBLE);
@@ -124,7 +125,12 @@ public class addProductPopup extends Dialog {
                     Toast.makeText(activity, "⚠️ Product note is too long !", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    apiRequest.addProductToList(activity, makeJson(), current_group_id);
+                    apiRequest.addProductToList(activity, makeJson());
+
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(500);
+                    } catch (InterruptedException ignored) { }
+
                     dismiss();
                 }
             }
