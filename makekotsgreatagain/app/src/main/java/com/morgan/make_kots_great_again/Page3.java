@@ -36,9 +36,10 @@ public class Page3 extends AppCompatActivity {
         ApiRequest apiRequest = new ApiRequest(Page3.this);
         apiRequest.Get_items_page3(products, current_list_selected, Page3.this);
 
+        listview2 = findViewById(R.id.listview2);
+
         try {
             TimeUnit.MILLISECONDS.sleep(500);
-            listview2 = findViewById(R.id.listview2);
             listview2.setAdapter(new MyCustomAdapter2(products, Page3.this));
         } catch (InterruptedException ignored) { }
 
@@ -82,6 +83,13 @@ public class Page3 extends AppCompatActivity {
             {}
         });
 
+        addReservePopup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                refreshView();
+            }
+        });
+
         addReservePopup.show();
     }
 
@@ -108,6 +116,18 @@ public class Page3 extends AppCompatActivity {
         {
             apiRequest.deleteProductRequest(Page3.this, products.get(i).product_uid);
         }
+    }
+
+    public void refreshView()
+    {
+        ApiRequest apiRequest = new ApiRequest(Page3.this);
+        products.clear();
+        apiRequest.Get_items_page3(products, current_list_selected, Page3.this);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+            listview2.setAdapter(new MyCustomAdapter2(products, Page3.this));
+        } catch (InterruptedException ignored) { }
     }
 
 }

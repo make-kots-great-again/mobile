@@ -64,7 +64,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        refresh_user_vue();
+                        //refresh_user_vue();
                     }
                 });
                 popup.build();
@@ -87,9 +87,16 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh_user_vue();
+    }
+
     // Dropdown menu with list "onChange functions"
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long l)
+    {
         //Lors d'un choix de liste, requete GET avec le nom de liste pour choper les elements de cette liste
         current_list_selected = parent.getItemAtPosition(position).toString();
 
@@ -101,6 +108,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
         apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
+
+        //refresh_user_vue();
     }
 
     @Override
@@ -120,7 +129,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
      * @param quantity
      * @param uid
      */
-    private void reset_arrayLists(final ArrayList<Product> products, final ArrayList<Product> products_modified){
+    private void reset_arrayLists(final ArrayList<Product> products, final ArrayList<Product> products_modified)
+    {
         products.clear();
         products_modified.clear();
     }
@@ -135,7 +145,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         startActivity(intent);
     }
 
-    private void refresh_user_vue(){
+    protected void refresh_user_vue()
+    {
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
         apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
@@ -177,8 +188,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         {
             if(!products.get(i).equals(products_modified.get(i)))
             {
-                Log.d("products_modified", products_modified.get(i).product_name + ", " + products_modified.get(i).product_quantity);
-
                 apiRequest.updateProductRequest(Page2.this, products.get(i).product_uid, products_modified.get(i).product_quantity);
             }
         }

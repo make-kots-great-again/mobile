@@ -116,13 +116,15 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) { }
+            public void onFailure(Call call, IOException e)
+            {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
                 String responseBody = response.body().string();
-                try {
+                try
+                {
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
 
@@ -147,8 +149,8 @@ public class ApiRequest {
      * @param selected_list
      * @param context
      */
-    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, final String selected_list, final Activity activity) {
-
+    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, final String selected_list, final Activity activity)
+    {
         OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder().header("Authorization", token).url(shopping_list_url).build();
@@ -162,28 +164,40 @@ public class ApiRequest {
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
+                // Permet de stocker l'ID du groupe dans une "shared preference"
+                SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
+                SharedPreferences.Editor editor = pref.edit();
+
                 String responseBody = response.body().string();
-                Log.d("GET", "Ok");
+
+                String group_id = "";
+
+                Log.d("responseBody", responseBody);
+
                 try {
-                    JSONObject Jobject = new JSONObject(responseBody);
-                    JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
-                    JSONArray Jarray = Jobject2.getJSONArray(selected_list);
+                    JSONObject Jobject = new JSONObject(responseBody); // entièreté du body , récup tt
+                    JSONObject Jobject2 = Jobject.getJSONObject("shoppingList"); // entièreté des shoppinglist
+                    JSONArray Jarray = Jobject2.getJSONArray(selected_list); // shopping list selected
 
                     products.clear();
                     products_modified.clear();
 
+                    group_id = Jarray.getJSONObject(0).getString("groupId");
+
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
+                        Log.d("test", object.toString());
+
+                        //group_id = object.getString("groupId");
 
                         String product_name = object.getString("product_name");
                         String product_brand = object.getString("product_brand");
                         String product_owner = object.getString("username");
                         if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
                         int product_quantity = Integer.parseInt(object.getString("quantity"));
+                        group_id = object.getString("groupId");
                         String product_uid = object.getString("shoppingListId");
-                        String group_id = object.getString("groupId");
                         String product_note = object.getString("product_note");
-
 
                         if (product_owner.equals("group")){
                             products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
@@ -193,15 +207,14 @@ public class ApiRequest {
                             products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                             products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
-
-                        // Permet de stocker l'ID du groupe dans une "shared preference"
-                        SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("group_id", group_id);
-                        editor.commit();
                     }
-
                 } catch (JSONException ignored) { }
+
+
+                editor.putString("group_id", group_id);
+                editor.commit();
+                Log.d("menu_group_id", group_id);
+
             }
         });
         try {
@@ -320,11 +333,18 @@ public class ApiRequest {
      * @param requestBody
      * @param current_group_id
      */
-    public void addProductToList(final Activity activity, JSONObject requestBody, String current_group_id)
+    public void addProductToList(final Activity activity, JSONObject requestBody)
     {
+
         JSONObject json = requestBody;
 
         OkHttpClient client = new OkHttpClient();
+
+        SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
+        current_group_id = pref.getString("group_id", null);
+
+        Log.d("current_group_id", current_group_id);
+
 
         Request request = new Request.Builder()
                 .header("Authorization", token)
@@ -336,7 +356,7 @@ public class ApiRequest {
         {
             @Override
             public void onFailure(Call call, IOException e)
-            {/*Nothing*/}
+            {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException
@@ -438,8 +458,6 @@ public class ApiRequest {
      * @param uidProduct
      */
     public void updateProductRequest(Activity activity, String uidProduct, int new_Quantity) {
-        Log.d("uid", uidProduct);
-        Log.d("newQty", String.valueOf(new_Quantity));
 
         String url = shopping_list_url + "updateQuantity/" + uidProduct;
 
@@ -452,8 +470,6 @@ public class ApiRequest {
         {
             e.printStackTrace();
         }
-
-        Log.d("body", body.toString());
 
         Request request = new Request.Builder().header("Authorization", token)
                 .url(url)
