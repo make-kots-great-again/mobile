@@ -64,7 +64,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        //refresh_user_vue();
+                        refresh_user_vue();
                     }
                 });
                 popup.build();
@@ -105,11 +105,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         editor.putString("list", current_list_selected);
         editor.commit();
 
-        ApiRequest apiRequest = new ApiRequest(Page2.this);
-        reset_arrayLists(products, products_modified);
-        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
-
-        //refresh_user_vue();
+        refresh_user_vue();
     }
 
     @Override
