@@ -44,7 +44,6 @@ public class addProductPopup extends Dialog {
     private TextView quantity, owner;
     private Button add_btn;
     private EditText input_note;
-
     private String qty, own, search_bar_hint;
     private String current_user_name, current_user_token, current_group_id, current_list_selected;
 
@@ -54,7 +53,7 @@ public class addProductPopup extends Dialog {
     private Map<String, Integer> codes = new HashMap<>();
 
     //CONSTRUCTOR
-    public addProductPopup(final Activity activity) {
+    public addProductPopup(Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.add_new_product_popup);
 
@@ -64,6 +63,7 @@ public class addProductPopup extends Dialog {
         current_group_id = pref.getString("group_id", null);
         current_list_selected = pref.getString("list", null);
 
+
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
         this.search_bar_hint = "Rechercher un produit";
@@ -72,20 +72,16 @@ public class addProductPopup extends Dialog {
 
         //Setup search bar ----------------------------------------------------------------------
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, products);
-        search_bar = (AutoCompleteTextView)findViewById(R.id.product_search_bar);
+        search_bar = findViewById(R.id.product_search_bar);
         search_bar.setThreshold(3);
         search_bar.setAdapter(adapter);
-        search_bar.addTextChangedListener(new TextWatcher()
-        {
+        search_bar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if(s.length() == search_bar.getThreshold())
-                {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == search_bar.getThreshold()) {
                     apiRequest.getProductsFromPattern(products, codes, s.toString());
                     refillAdapter();
                 }

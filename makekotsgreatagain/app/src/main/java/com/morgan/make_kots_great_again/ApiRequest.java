@@ -41,8 +41,9 @@ public class ApiRequest {
     String user = new String();
     String current_group_id = new String();
 
-    String shopping_list_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/";
-    String loggin_url = "https://kotsapp.herokuapp.com/server/api/login";
+    String shopping_list_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/"; // GET
+    String loggin_url = "https://kotsapp.herokuapp.com/server/api/login"; // POST
+    String products_pattern_url = "https://kotsapp.herokuapp.com/server/api/products/"; // GET + pattern
     Activity activity;
 
     /**
@@ -193,6 +194,7 @@ public class ApiRequest {
 
                         // Check si y a un produit dans la liste ou si la liste n'a PAS de produit.
                         if (object.has("code")){
+                            int product_code = Integer.parseInt(object.getString("code"));
                             String product_name = object.getString("product_name");
                             String product_brand = object.getString("product_brand");
                             String product_owner = object.getString("username");
@@ -200,8 +202,8 @@ public class ApiRequest {
                             int product_quantity = Integer.parseInt(object.getString("quantity"));
                             String product_uid = object.getString("shoppingListId");
                             String product_note = object.getString("product_note");
-                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
-                            products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
+                            products.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
+                            products_modified.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
                         else {
                             Log.d("PRODUCTS", "No Products left");
@@ -226,6 +228,7 @@ public class ApiRequest {
      * @param selected_list
      * @param activity
      */
+    /*
     protected void Get_items_page3(final ArrayList<Product> products, final String selected_list, final Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
@@ -273,7 +276,7 @@ public class ApiRequest {
                 } catch (JSONException ignored) { }
             }
         });
-    }
+    }*/
 
     /**
      * Make an API request to get a list of product that contains the pattern
@@ -282,7 +285,7 @@ public class ApiRequest {
      * @param products_codes
      * @param pattern
      */
-    public void getProductsFromPattern(final ArrayList<String> db_products, final Map<String, Integer> products_codes, String pattern)
+    public void getProductsFromPattern(ArrayList<Product> db_products, String pattern)
     {
         String url = "https://kotsapp.herokuapp.com/server/api/products/" + pattern;
 
@@ -305,14 +308,11 @@ public class ApiRequest {
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
+                        int product_code = Integer.parseInt(object.getString("code"));
                         String product_name = object.getString("product_name");
-                        String product_code = object.getString("code");
 
-                        db_products.add(product_name);
-
-                        products_codes.put(product_name, Integer.parseInt(product_code));
+                        db_products.add(new Product(product_code, product_name));
                     }
-
                 } catch (JSONException ignored) { }
             }
         });

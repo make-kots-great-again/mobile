@@ -59,11 +59,11 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         TextView listItemText = view.findViewById(R.id.list_item_string);
-        listItemText.setText(cutLongText(products.get(position).product_name));
+        listItemText.setText(cutLongText(products.get(position).getProduct_name()));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.list_item_owner_string);
-        String current_text = products.get(position).product_owner;
+        String current_text = products.get(position).getProduct_owner();
 
         listItemOwnerText.setText(current_text);
         if (current_text.equals("GROUP")){
@@ -75,7 +75,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.quantity);
-        quantity.setText(Integer.toString(products.get(position).product_quantity));
+        quantity.setText(Integer.toString(products.get(position).getProduct_quantity()));
 
         //Image Buttons (Moins et Plus)
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
@@ -90,8 +90,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
                     popup.setOnDismissListener(new DialogInterface.OnDismissListener()
                     {
                         @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
+                        public void onDismiss(DialogInterface dialog) {
                             ApiRequest apiRequest = new ApiRequest(activity);
                             Page2 page2 = new Page2();
 
