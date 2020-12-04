@@ -22,12 +22,12 @@ import java.util.ArrayList;
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     private static Activity activity;
-    private List currently_selected_list;
+    private String current_list_name;
     private ArrayList<Product> products =  new ArrayList<Product>();
     private ArrayList<Product> products_modified = new ArrayList<Product>();
 
-    public MyCustomAdapter(List current_list, ArrayList<Product> products, ArrayList<Product> products_modified, Activity activity) {
-        this.currently_selected_list = current_list;
+    public MyCustomAdapter(String name, ArrayList<Product> products, ArrayList<Product> products_modified, Activity activity) {
+        this.current_list_name = name;
         this.products = products;
         this.products_modified = products_modified;
         this.activity = activity;
@@ -98,7 +98,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
                                 Page2 page2 = new Page2();
 
                                 products.clear();
-                                apiRequest.Get_Shopping_Lists_items(products, products_modified, currently_selected_list, activity);
+                                apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_name, activity);
                             }
                         });
                         popup.show();

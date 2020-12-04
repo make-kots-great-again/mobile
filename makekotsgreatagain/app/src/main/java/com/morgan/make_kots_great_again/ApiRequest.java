@@ -165,7 +165,7 @@ public class ApiRequest {
      * @param selected_list
      * @param context
      */
-    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, List current_list, final Activity activity)
+    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, String current_list_name, final Activity activity)
     {
         OkHttpClient client = new OkHttpClient();
 
@@ -185,7 +185,7 @@ public class ApiRequest {
                 try {
                     JSONObject Jobject = new JSONObject(responseBody); // entièreté du body , récup tt
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList"); // entièreté des shoppinglist
-                    JSONArray Jarray = Jobject2.getJSONArray(current_list.getList_name()); // shopping list selected
+                    JSONArray Jarray = Jobject2.getJSONArray(current_list_name); // shopping list selected
 
                     products.clear();
                     products_modified.clear();
@@ -216,7 +216,7 @@ public class ApiRequest {
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = activity.findViewById(R.id.listview);
-            listview.setAdapter(new MyCustomAdapter(current_list, products, products_modified, activity));
+            listview.setAdapter(new MyCustomAdapter(current_list_name, products, products_modified, activity));
         } catch (InterruptedException ignored) { }
     }
 
@@ -230,7 +230,7 @@ public class ApiRequest {
      * @param activity
      */
 
-    protected void Get_items_page3(final ArrayList<Product> products, final String selected_list, final Activity activity) {
+    protected void Get_items_page3(ArrayList<Product> products, String list_name, Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -248,7 +248,7 @@ public class ApiRequest {
                 try {
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
-                    JSONArray Jarray = Jobject2.getJSONArray(selected_list);
+                    JSONArray Jarray = Jobject2.getJSONArray(list_name);
 
                     products.clear();
 
@@ -422,11 +422,14 @@ public class ApiRequest {
      * @param current_product
      * @param new_Quantity
      */
-    public void updateProductRequest(Activity activity, Product current_product, int new_Quantity) {
+    public void updateProductRequest(Activity activity, Product current_product, Product product_modified) {
+
+        Log.d("Product-quantity", String.valueOf(current_product.getProduct_quantity()));
+        Log.d("Modified-quantity", String.valueOf(product_modified.getProduct_quantity()));
 
         JSONObject body = new JSONObject();
         try {
-            body.put("quantity", new_Quantity);
+            body.put("quantity", product_modified.getProduct_quantity());
         }
         catch (JSONException e) { e.printStackTrace(); }
 

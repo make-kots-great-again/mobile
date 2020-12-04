@@ -35,6 +35,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page2);
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("page2_needs_refresh", "false");
+        editor.commit();
+
         spinner = findViewById(R.id.dropdown_list);
         spinner.setOnItemSelectedListener(this);
         TextView welcome_user = findViewById(R.id.label_welcome);
@@ -80,15 +85,26 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         {
             @Override
             public void onClick(View v) {
-                /*
                 if(quantitiesHaveBeenChanged(products, products_modified)) {
                     getModifiedQuantities(products, products_modified, apiRequest);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(500);
+                        refresh_user_vue();
+                    } catch (InterruptedException ignored) { }
                 }
-
-                launch_page3();*/
-                refresh_user_vue();
+                launch_page3();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences pref = this.getSharedPreferences("MyPref", 0);
+        String needs_refresh = pref.getString("page2_needs_refresh", null);
+        if (needs_refresh.equals("true")){
+            refresh_user_vue();
+        }
     }
 
     // Dropdown menu with list "onChange functions"
@@ -106,12 +122,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         Log.d("CURRENT-LIST-NAME", current_list_name);
         Log.d("CURRENT-LIST-GroupID", current_list_groupId);
 
-        /*
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("current_list_name", current_list_name);
-        editor.putString("current_list_groupId", current_list_groupId);
-        editor.commit();*/
+        editor.commit();
 
         refresh_user_vue();
     }
@@ -152,7 +166,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     protected void refresh_user_vue() {
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
-        apiRequest.Get_Shopping_Lists_items(products, products_modified, list_selected, Page2.this);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, list_selected.getList_name(), Page2.this);
     }
 
     /**
@@ -188,7 +202,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest) {
         for (int i = 0; i<products.size(); i++) {
             if(!products.get(i).equals(products_modified.get(i))) {
-                apiRequest.updateProductRequest(Page2.this, products.get(i), products_modified.get(i).getProduct_quantity());
+                apiRequest.updateProductRequest(Page2.this, products.get(i), products_modified.get(i));
             }
         }
     }
