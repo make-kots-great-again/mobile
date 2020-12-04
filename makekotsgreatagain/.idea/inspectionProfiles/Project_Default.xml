@@ -606,7 +606,6 @@
     <inspection_tool class="InconsistentLineSeparators" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IndexOfReplaceableByContains" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InfiniteLoopStatement" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="InfiniteRecursion" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InnerClassMayBeStatic" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InstantiatingObjectToGetClassObject" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="IntegerDivisionInFloatingPointContext" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -682,7 +681,6 @@
     <inspection_tool class="LambdaParameterTypeCanBeSpecified" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="LengthOneStringsInConcatenation" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="ListRemoveInLoop" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="LongLine" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="LongLiteralsEndingWithLowercaseL" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="LoopConditionNotUpdatedInsideLoop" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="ignoreIterators" value="false" />
@@ -806,7 +804,6 @@
     <inspection_tool class="RawUseOfParameterizedType" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ReadWriteStringCanBeUsed" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantArrayCreation" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="RedundantCast" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantClassCall" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantCollectionOperation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantComparatorComparing" enabled="false" level="WARNING" enabled_by_default="false" />

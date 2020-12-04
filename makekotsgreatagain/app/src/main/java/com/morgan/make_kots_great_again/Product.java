@@ -14,7 +14,10 @@ public class Product {
     public Product(String name, String brand, String owner, int quantity, String uid, String note){
         this.product_name = name;
         this.product_brand = brand;
-        this.product_owner = owner;
+
+        if (owner.equals("group")) { owner.toUpperCase();this.product_owner = owner; }
+        else { this.product_owner = owner; }
+
         this.product_quantity = quantity;
         this.product_uid = uid;
         this.product_note = note;

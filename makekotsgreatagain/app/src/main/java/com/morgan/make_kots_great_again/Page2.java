@@ -22,11 +22,13 @@ import java.util.concurrent.TimeUnit;
 public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner spinner;
-    private ArrayAdapter<String> spinnerArrayAdapter;
-    protected String current_list_selected;
-    protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
-    protected final ArrayList<Product> products = new ArrayList<>();
-    protected final ArrayList<Product> products_modified = new ArrayList<>(); // copy of products, used to know if quantities have been modified
+    protected String current_list_name;
+    protected String current_list_groupId;
+    //protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
+    protected ArrayList<Product> products = new ArrayList<>();
+    protected ArrayList<Product> products_modified = new ArrayList<>(); // copy of products, used to know if quantities have been modified
+
+    protected ArrayList<List> lists = new ArrayList<>(); // ArrayList comprenant toutes les lites auquels l'utilisateurs à accés (stocké en tant qu'objet liste)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +47,30 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         } catch (InterruptedException ignored) { }
         // ---------------------------------------------------------
 
+
+
         ApiRequest apiRequest = new ApiRequest(Page2.this);
 
         welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + apiRequest.user + "</span> !"));
-        apiRequest.Get_Shopping_Lists(lists);
+        apiRequest.Get_Shopping_Lists(lists); // Updates ArrayList "lists"
+
+        /*
+        List list1 = new List("id1", "football", List.ListType.GROUP);
+        List list2 = new List("id2", "volleyball", List.ListType.GROUP);
+        List list3 = new List("id3", "Liste Personelle de james", List.ListType.PERSONAL);
+
+        lists.add(list1);
+        lists.add(list2);
+        lists.add(list3);
+
+         */
 
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_spinner();
         } catch (InterruptedException ignored) { }
 
+        /*
         final Button btn_add_product = findViewById(R.id.button_new_product);
         btn_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +85,9 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 });
                 popup.build();
             }
-        });
+        });*/
 
+        /*
         Button btn_mode_achat = findViewById(R.id.button_mode_achat);
         btn_mode_achat.setOnClickListener(new View.OnClickListener()
         {
@@ -84,25 +101,35 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
                 launch_page3();
             }
-        });
+        });*/
     }
+    /*
 
     @Override
     protected void onResume() {
         super.onResume();
         refresh_user_vue();
-    }
+    }*/
 
     // Dropdown menu with list "onChange functions"
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l)
     {
         //Lors d'un choix de liste, requete GET avec le nom de liste pour choper les elements de cette liste
-        current_list_selected = parent.getItemAtPosition(position).toString();
+        reset_selected_lists(lists);
+        List list_selected = (List) parent.getItemAtPosition(position);
+        list_selected.set_is_selected(true);
+
+        current_list_name = list_selected.getList_name();
+        current_list_groupId = list_selected.getList_id();
+
+        Log.d("CURRENT-LIST-NAME", current_list_name);
+        Log.d("CURRENT-LIST-GroupID", current_list_groupId);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("list", current_list_selected);
+        editor.putString("current_list_name", current_list_name);
+        editor.putString("current_list_groupId", current_list_groupId);
         editor.commit();
 
         refresh_user_vue();
@@ -112,8 +139,8 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     public void onNothingSelected(AdapterView<?> adapterView) { }
 
     private void set_spinner(){
-        spinnerArrayAdapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, lists);
-        spinner.setAdapter(spinnerArrayAdapter);
+        SpinnerCustomAdapter spinnerCustomAdapter = new SpinnerCustomAdapter(getBaseContext(), lists);
+        spinner.setAdapter(spinnerCustomAdapter);
     }
 
     /**
@@ -141,11 +168,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         startActivity(intent);
     }
 
-    protected void refresh_user_vue()
-    {
+    protected void refresh_user_vue() {
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
-        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, Page2.this);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_name, Page2.this);
     }
 
     /**
@@ -178,14 +204,24 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
      * @param products_modified
      * @param apiRequest
      */
-    public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest)
-    {
-        for(int i = 0; i<products.size(); i++)
-        {
-            if(!products.get(i).equals(products_modified.get(i)))
-            {
+    public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest) {
+        for (int i = 0; i<products.size(); i++) {
+            if(!products.get(i).equals(products_modified.get(i))) {
                 apiRequest.updateProductRequest(Page2.this, products.get(i).product_uid, products_modified.get(i).product_quantity);
             }
         }
+    }
+    private void reset_selected_lists (ArrayList<List> list){
+        for (int z =0; z<list.size(); z++){
+            list.get(z).set_is_selected(false);
+        }
+    }
+    private List get_the_current_selected_list (ArrayList<List> list){
+        for (int z =0; z<list.size(); z++){
+            if (list.get(z).get_selected_list()){
+                return list.get(z);
+            }
+        }
+        return null;
     }
 }

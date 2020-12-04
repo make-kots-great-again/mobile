@@ -105,11 +105,11 @@ public class ApiRequest {
 
     /**
      * ----------------------------------------------------------------------------------------------------
-     *  Method that gets all the diffrenent shopping list that the current user possess via an api request
+     *  Method that gets all the different shopping list that the current user possess via an api request
      * ----------------------------------------------------------------------------------------------------
      * @param shopping_list_arraylist
      */
-    public void Get_Shopping_Lists(final ArrayList<String> shopping_list_arraylist) {
+    public void Get_Shopping_Lists(final ArrayList<List> shopping_list_arraylist) {
         OkHttpClient client = new OkHttpClient();
 
         final Request request = new Request.Builder().header("Authorization", token).url(shopping_list_url).build();
@@ -125,13 +125,27 @@ public class ApiRequest {
                 String responseBody = response.body().string();
                 try
                 {
+                    shopping_list_arraylist.clear();
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
 
                     Iterator<String> iter = Jobject2.keys();
                     while(iter.hasNext()){
                         String key = iter.next();
-                        shopping_list_arraylist.add(key);
+                        JSONArray Jarray = Jobject2.getJSONArray(key);
+
+                        JSONObject object = Jarray.getJSONObject(0);
+                        String group_id = object.getString("groupId");
+                        String list_name = object.getString("list");
+                        List.ListType listType;
+                        Log.d("LIST-ID-MOMO", list_name);
+                        Log.d("GROUP-ID-MOMO", group_id);
+
+                        if (list_name.contains("perso")){ listType = List.ListType.PERSONAL; }
+                        else { listType = List.ListType.GROUP; }
+                        Log.d("LIST-TYPE-MOMO", listType.toString());
+                        shopping_list_arraylist.add(new List(group_id, list_name, listType));
+
                     }
                 } catch (JSONException ignored) { }
             }
@@ -149,7 +163,7 @@ public class ApiRequest {
      * @param selected_list
      * @param context
      */
-    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, final String selected_list, final Activity activity)
+    protected void Get_Shopping_Lists_items(ArrayList<Product> products, ArrayList<Product> products_modified, List current_list, final Activity activity)
     {
         OkHttpClient client = new OkHttpClient();
 
@@ -164,62 +178,43 @@ public class ApiRequest {
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                // Permet de stocker l'ID du groupe dans une "shared preference"
-                SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
-                SharedPreferences.Editor editor = pref.edit();
-
                 String responseBody = response.body().string();
-
-                String group_id = "";
-
-                Log.d("responseBody", responseBody);
 
                 try {
                     JSONObject Jobject = new JSONObject(responseBody); // entièreté du body , récup tt
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList"); // entièreté des shoppinglist
-                    JSONArray Jarray = Jobject2.getJSONArray(selected_list); // shopping list selected
+                    JSONArray Jarray = Jobject2.getJSONArray(current_list.getList_name()); // shopping list selected
 
                     products.clear();
                     products_modified.clear();
 
-                    group_id = Jarray.getJSONObject(0).getString("groupId");
-
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
-                        Log.d("test", object.toString());
 
-                        //group_id = object.getString("groupId");
-
-                        String product_name = object.getString("product_name");
-                        String product_brand = object.getString("product_brand");
-                        String product_owner = object.getString("username");
-                        if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
-                        int product_quantity = Integer.parseInt(object.getString("quantity"));
-                        group_id = object.getString("groupId");
-                        String product_uid = object.getString("shoppingListId");
-                        String product_note = object.getString("product_note");
-
-                        if (product_owner.equals("group")){
-                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
-                            products_modified.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
-                        }
-                        else {
+                        // Check si y a un produit dans la liste ou si la liste n'a PAS de produit.
+                        if (object.has("code")){
+                            String product_name = object.getString("product_name");
+                            String product_brand = object.getString("product_brand");
+                            String product_owner = object.getString("username");
+                            if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                            int product_quantity = Integer.parseInt(object.getString("quantity"));
+                            String product_uid = object.getString("shoppingListId");
+                            String product_note = object.getString("product_note");
                             products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                             products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
+                        else {
+                            //String list_id = object.getString("groupId");
+                            //String list_name = object.getString("list");
+                            Log.d("PRODUCTS", "No Products left");
+                        }
                     }
                 } catch (JSONException ignored) { }
-
-
-                editor.putString("group_id", group_id);
-                editor.commit();
-                Log.d("menu_group_id", group_id);
-
             }
         });
         try {
             TimeUnit.MILLISECONDS.sleep(500);
-            ListView listview = (ListView) activity.findViewById(R.id.listview);
+            ListView listview = activity.findViewById(R.id.listview);
             listview.setAdapter(new MyCustomAdapter(products, products_modified, activity));
         } catch (InterruptedException ignored) { }
     }
