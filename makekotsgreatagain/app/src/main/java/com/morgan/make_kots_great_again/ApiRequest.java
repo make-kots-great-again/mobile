@@ -44,6 +44,8 @@ public class ApiRequest {
     String shopping_list_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/"; // GET
     String loggin_url = "https://kotsapp.herokuapp.com/server/api/login"; // POST
     String products_pattern_url = "https://kotsapp.herokuapp.com/server/api/products/"; // GET + pattern
+    String add_product_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/"; // POST + groupID
+    String delete_product_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/"; // POST + uidProduct
     Activity activity;
 
     /**
@@ -138,14 +140,12 @@ public class ApiRequest {
                         JSONObject object = Jarray.getJSONObject(0);
                         String group_id = object.getString("groupId");
                         String list_name = object.getString("list");
-                        List.ListType listType;
+                        String list_type = object.getString("listType");
                         Log.d("LIST-ID-MOMO", list_name);
                         Log.d("GROUP-ID-MOMO", group_id);
+                        Log.d("LIST-TYPE-MOMO", list_type);
 
-                        if (list_name.contains("perso")){ listType = List.ListType.PERSONAL; }
-                        else { listType = List.ListType.GROUP; }
-                        Log.d("LIST-TYPE-MOMO", listType.toString());
-                        shopping_list_arraylist.add(new List(group_id, list_name, listType));
+                        shopping_list_arraylist.add(new List(group_id, list_name, list_type));
 
                     }
                 } catch (JSONException ignored) { }
@@ -228,7 +228,7 @@ public class ApiRequest {
      * @param selected_list
      * @param activity
      */
-    /*
+
     protected void Get_items_page3(final ArrayList<Product> products, final String selected_list, final Activity activity) {
 
         OkHttpClient client = new OkHttpClient();
@@ -255,28 +255,28 @@ public class ApiRequest {
 
                     for(int i = 0; i < Jarray.length(); i++) {
                         JSONObject object = Jarray.getJSONObject(i);
-                        String product_name = object.getString("product_name");
-                        String product_owner = object.getString("username");
-                        String product_brand = object.getString("product_brand");
-                        if (product_owner.equals(user)){ product_owner = "Me"; }
-                        if (product_owner.equals("group")){ product_owner.toUpperCase(); }
-                        int product_quantity = Integer.parseInt(object.getString("quantity"));
-                        String product_uid = object.getString("shoppingListId");
-                        String group_id = object.getString("groupId");
-                        String product_note = object.getString("product_note");
 
-                        if (product_owner.equals("group")){
-                            products.add(new Product(product_name, product_brand, product_owner.toUpperCase(), product_quantity, product_uid, product_note));
+                        // Check si y a un produit dans la liste ou si la liste n'a PAS de produit.
+                        if (object.has("code")){
+                            int product_code = Integer.parseInt(object.getString("code"));
+                            String product_name = object.getString("product_name");
+                            String product_brand = object.getString("product_brand");
+                            String product_owner = object.getString("username");
+                            if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                            int product_quantity = Integer.parseInt(object.getString("quantity"));
+                            String product_uid = object.getString("shoppingListId");
+                            String product_note = object.getString("product_note");
+                            products.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
                         else {
-                            products.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
+                            Log.d("PRODUCTS", "No Products left");
                         }
                     }
 
                 } catch (JSONException ignored) { }
             }
         });
-    }*/
+    }
 
     /**
      * Make an API request to get a list of product that contains the pattern
@@ -285,13 +285,11 @@ public class ApiRequest {
      * @param products_codes
      * @param pattern
      */
-    public void getProductsFromPattern(ArrayList<Product> db_products, String pattern)
-    {
-        String url = "https://kotsapp.herokuapp.com/server/api/products/" + pattern;
+    public void getProductsFromPattern(ArrayList<String> db_products, Map<String, Integer> products_codes, String pattern) {
 
         OkHttpClient client = new OkHttpClient();
 
-        Request request = new Request.Builder().header("Authorization", token).url(url).build();
+        Request request = new Request.Builder().header("Authorization", token).url(products_pattern_url + pattern).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -311,7 +309,9 @@ public class ApiRequest {
                         int product_code = Integer.parseInt(object.getString("code"));
                         String product_name = object.getString("product_name");
 
-                        db_products.add(new Product(product_code, product_name));
+                        db_products.add(product_name);
+
+                        products_codes.put(product_name, product_code);
                     }
                 } catch (JSONException ignored) { }
             }
@@ -326,60 +326,45 @@ public class ApiRequest {
      * @param requestBody
      * @param current_group_id
      */
-    public void addProductToList(final Activity activity, JSONObject requestBody)
-    {
+    public void addProductToList(Activity activity, JSONObject requestBody, List list) {
 
         JSONObject json = requestBody;
 
         OkHttpClient client = new OkHttpClient();
 
-        SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
-        current_group_id = pref.getString("group_id", null);
-
-        Log.d("current_group_id", current_group_id);
+        Log.d("ListID", list.getList_id());
 
 
         Request request = new Request.Builder()
                 .header("Authorization", token)
-                .url("https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/" + current_group_id)
+                .url(add_product_url + list.getList_id())
                 .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
                 .build();
 
-        client.newCall(request).enqueue(new Callback()
-        {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e)
-            {}
+            public void onFailure(Call call, IOException e) {
+                Log.d("AddProduct", "Product ERROR !");
+            }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
-                try
-                {
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
                     String responseBody = response.body().string();
 
                     final JSONObject Jobject = new JSONObject(responseBody);
 
-                    activity.runOnUiThread(new Runnable()
-                    {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
-                        public void run()
-                        {
-                            try
-                            {
+                        public void run() {
+                            try {
                                 Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
+                            catch(Exception e) { e.printStackTrace(); }
                         }
                     });
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                catch (Exception e) { e.printStackTrace(); }
             }
         });
     }

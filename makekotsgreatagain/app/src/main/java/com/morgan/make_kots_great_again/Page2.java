@@ -63,7 +63,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         btn_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductPopup popup = new addProductPopup(Page2.this);
+                addProductPopup popup = new addProductPopup(Page2.this, list_selected);
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

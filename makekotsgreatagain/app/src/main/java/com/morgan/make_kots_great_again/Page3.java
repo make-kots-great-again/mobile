@@ -114,7 +114,7 @@ public class Page3 extends AppCompatActivity {
 
         for(int i=0; i<products.size(); i++)
         {
-            apiRequest.deleteProductRequest(Page3.this, products.get(i).product_uid);
+            apiRequest.deleteProductRequest(Page3.this, products.get(i).getProduct_uid());
         }
     }
 

@@ -4,10 +4,8 @@ public class List {
 
     private String list_id;
     private String list_name;
-    protected enum ListType {GROUP, PERSONAL}
+    private String list_type;
     private boolean is_selected = false;
-
-    private ListType listType;
 
     /**
      * --------------
@@ -16,10 +14,10 @@ public class List {
      * @param id
      * @param name
      */
-    public List(String id, String name, ListType type) {
+    public List(String id, String name, String type) {
         this.list_id = id;
         this.list_name = name;
-        this.listType = type;
+        this.list_type = type;
     }
 
     public String getList_id() {
@@ -29,9 +27,12 @@ public class List {
     public String getList_name() {
         return list_name;
     }
-    public ListType getListType() {
-        return listType;
+
+    public boolean is_list_personal() {
+        if (list_type.equals("PERSONAL")){ return true; }
+        return false;
     }
+
     public boolean get_selected_list() {
         return is_selected;
     }

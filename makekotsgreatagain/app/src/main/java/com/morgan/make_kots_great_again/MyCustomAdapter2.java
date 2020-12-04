@@ -69,15 +69,15 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         final TextView listItemText = view.findViewById(R.id.product_name);
-        listItemText.setText(cutLongText(products.get(position).product_name));
+        listItemText.setText(cutLongText(products.get(position).getProduct_name()));
 
         //Product BRAND
         final TextView brand = view.findViewById(R.id.product_brand);
-        brand.setText(cutLongText(products.get(position).product_brand));
+        brand.setText(cutLongText(products.get(position).getProduct_brand()));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.product_owner);
-        String current_text = products.get(position).product_owner;
+        String current_text = products.get(position).getProduct_owner();
 
         listItemOwnerText.setText(current_text);
         if (current_text.equals("GROUP")){
@@ -89,7 +89,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.product_quantity);
-        quantity.setText(Integer.toString(products.get(position).product_quantity));
+        quantity.setText(Integer.toString(products.get(position).getProduct_quantity()));
 
         //Constraint layout
         final ConstraintLayout constraintLayout = view.findViewById(R.id.constraint_layout);
@@ -105,7 +105,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
                     listItemText.setPaintFlags(listItemText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     brand.setPaintFlags(brand.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
-                String snackbar_text = products.get(position).product_note;
+                String snackbar_text = products.get(position).getProduct_note();
                 if (!snackbar_text.equals("null")){
                     Snackbar snackbar = Snackbar.make(constraintLayout, snackbar_text, Snackbar.LENGTH_SHORT);
 

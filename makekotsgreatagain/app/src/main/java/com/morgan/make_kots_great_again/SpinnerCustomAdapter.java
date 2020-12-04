@@ -43,7 +43,7 @@ public class SpinnerCustomAdapter extends BaseAdapter {
         List current_list = shopping_lists.get(position);
 
         spinner_text.setText(current_list.getList_name());
-        if (current_list.getListType() == List.ListType.PERSONAL){
+        if (current_list.is_list_personal()){
             spinner_text.setTextColor(Color.RED);
         }
 

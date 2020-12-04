@@ -44,25 +44,19 @@ public class addProductPopup extends Dialog {
     private TextView quantity, owner;
     private Button add_btn;
     private EditText input_note;
+
     private String qty, own, search_bar_hint;
-    private String current_user_name, current_user_token, current_group_id, current_list_selected;
 
     ArrayAdapter<String> adapter;
 
+    private ArrayList<Product> products2 = new ArrayList<>();
     private ArrayList<String> products = new ArrayList<>();
     private Map<String, Integer> codes = new HashMap<>();
 
     //CONSTRUCTOR
-    public addProductPopup(Activity activity) {
+    public addProductPopup(Activity activity, List current_list) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.add_new_product_popup);
-
-        SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
-        current_user_name = pref.getString("username", null);
-        current_user_token = pref.getString("token", null);
-        current_group_id = pref.getString("group_id", null);
-        current_list_selected = pref.getString("list", null);
-
 
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
@@ -75,9 +69,11 @@ public class addProductPopup extends Dialog {
         search_bar = findViewById(R.id.product_search_bar);
         search_bar.setThreshold(3);
         search_bar.setAdapter(adapter);
-        search_bar.addTextChangedListener(new TextWatcher() {
+        search_bar.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -100,11 +96,12 @@ public class addProductPopup extends Dialog {
         // Setup UI zone for owner selection ---------------------------------------------------
         this.owner = findViewById(R.id.text_owner);
         this.radioGroup = findViewById(R.id.radio_group);
-        if(current_list_selected.contains("perso"))
-        {
+
+        if(current_list.is_list_personal()) {
             this.owner.setVisibility(View.INVISIBLE);
             this.radioGroup.setVisibility(View.INVISIBLE);
         }
+
         this.meRadio = findViewById(R.id.btn_owner);
         this.meRadio.setChecked(true);
         this.groupeRadio = findViewById(R.id.btn_group);
@@ -117,10 +114,10 @@ public class addProductPopup extends Dialog {
             @Override
             public void onClick(View v) {
                 if (input_note.getText().length() >= 55){
-                    Toast.makeText(activity, "⚠️ Product note is too long !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "⚠️ La note pour ce produit est trop longue !", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    apiRequest.addProductToList(activity, makeJson());
+                    apiRequest.addProductToList(activity, makeJson(), current_list);
 
                     try {
                         TimeUnit.MILLISECONDS.sleep(500);
