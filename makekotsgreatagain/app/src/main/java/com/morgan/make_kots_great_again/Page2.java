@@ -59,12 +59,10 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             set_spinner();
         } catch (InterruptedException ignored) { }
 
-        /*
         final Button btn_add_product = findViewById(R.id.button_new_product);
         btn_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 addProductPopup popup = new addProductPopup(Page2.this);
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -74,7 +72,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
                 });
                 popup.build();
             }
-        });*/
+        });
 
 
         Button btn_mode_achat = findViewById(R.id.button_mode_achat);
@@ -197,7 +195,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest) {
         for (int i = 0; i<products.size(); i++) {
             if(!products.get(i).equals(products_modified.get(i))) {
-                apiRequest.updateProductRequest(Page2.this, products.get(i).product_uid, products_modified.get(i).product_quantity);
+                apiRequest.updateProductRequest(Page2.this, products.get(i).getProduct_uid(), products_modified.get(i).getProduct_quantity());
             }
         }
     }
@@ -206,6 +204,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             list.get(z).set_is_selected(false);
         }
     }
+
     private List get_the_current_selected_list (ArrayList<List> list){
         for (int z =0; z<list.size(); z++){
             if (list.get(z).get_selected_list()){

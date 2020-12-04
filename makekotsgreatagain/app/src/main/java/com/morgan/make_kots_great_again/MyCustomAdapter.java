@@ -81,14 +81,11 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
         ImageButton addBtn = view.findViewById(R.id.add_btn);
 
-        deleteBtn.setOnClickListener(new View.OnClickListener()
-        {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (Integer.parseInt(quantity.getText().toString()) == 1)
-                {
-                    deleteProductPopup popup = new deleteProductPopup(activity, products.get(position).product_uid);
+            public void onClick(View v) {
+                if (Integer.parseInt(quantity.getText().toString()) == 1) {
+                    deleteProductPopup popup = new deleteProductPopup(activity, products.get(position));
 
                     popup.setOnDismissListener(new DialogInterface.OnDismissListener()
                     {

@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Product {
 
-    String product_name;
-    String product_brand;
-    String product_owner;
-    int product_quantity;
-    String product_uid;
-    String product_note;
+    private String product_name;
+    private String product_brand;
+    private String product_owner;
+    private int product_quantity;
+    private String product_uid; // Universal Unique IDentifier
+    private String product_note;
 
     public Product(String name, String brand, String owner, int quantity, String uid, String note){
         this.product_name = name;
@@ -25,6 +25,14 @@ public class Product {
 
     public String getProduct_owner() {
         return product_owner;
+    }
+
+    public String getProduct_uid() {
+        return product_uid;
+    }
+
+    public int getProduct_quantity() {
+        return product_quantity;
     }
 
     public void reduce_quantity() { this.product_quantity--; }

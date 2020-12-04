@@ -407,40 +407,28 @@ public class ApiRequest {
         client.newCall(request).enqueue(new Callback()
         {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e)
-            {/*Nothing*/}
+            public void onFailure(@NotNull Call call, @NotNull IOException e) { }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
-            {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseBody = response.body().string();
 
                 final JSONObject Jobject;
 
-                try
-                {
+                try {
                     Jobject = new JSONObject(responseBody);
 
-                    activity.runOnUiThread(new Runnable()
-                    {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
-                        public void run()
-                        {
-                            try
-                            {
+                        public void run() {
+                            try {
                                 Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
+                            catch (JSONException e) { }
                         }
                     });
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
+                catch (JSONException e) { }
             }
         });
     }

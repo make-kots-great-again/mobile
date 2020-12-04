@@ -54,8 +54,7 @@ public class addProductPopup extends Dialog {
     private Map<String, Integer> codes = new HashMap<>();
 
     //CONSTRUCTOR
-    public addProductPopup(final Activity activity)
-    {
+    public addProductPopup(final Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.add_new_product_popup);
 
