@@ -48,8 +48,8 @@
 
     <TextView
         android:id="@+id/product_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
         android:textColor="@color/black"
