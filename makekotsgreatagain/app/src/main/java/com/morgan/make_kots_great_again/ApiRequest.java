@@ -204,8 +204,6 @@ public class ApiRequest {
                             products_modified.add(new Product(product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                         }
                         else {
-                            //String list_id = object.getString("groupId");
-                            //String list_name = object.getString("list");
                             Log.d("PRODUCTS", "No Products left");
                         }
                     }
@@ -215,7 +213,7 @@ public class ApiRequest {
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             ListView listview = activity.findViewById(R.id.listview);
-            listview.setAdapter(new MyCustomAdapter(products, products_modified, activity));
+            listview.setAdapter(new MyCustomAdapter(current_list, products, products_modified, activity));
         } catch (InterruptedException ignored) { }
     }
 

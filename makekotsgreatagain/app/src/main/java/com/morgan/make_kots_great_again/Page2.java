@@ -24,11 +24,11 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     private Spinner spinner;
     protected String current_list_name;
     protected String current_list_groupId;
-    //protected final ArrayList<String> lists = new ArrayList<>(); // list contenant les noms des shoppinglist du user
     protected ArrayList<Product> products = new ArrayList<>();
     protected ArrayList<Product> products_modified = new ArrayList<>(); // copy of products, used to know if quantities have been modified
 
-    protected ArrayList<List> lists = new ArrayList<>(); // ArrayList comprenant toutes les lites auquels l'utilisateurs à accés (stocké en tant qu'objet liste)
+    protected ArrayList<List> lists = new ArrayList<>(); // ArrayList comprenant toutes les listes auquels l'utilisateurs à accés (stocké en tant qu'objet liste)
+    protected List list_selected; // Liste actuellement selectionner dans le menu deroulant.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +54,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + apiRequest.user + "</span> !"));
         apiRequest.Get_Shopping_Lists(lists); // Updates ArrayList "lists"
 
-        /*
-        List list1 = new List("id1", "football", List.ListType.GROUP);
-        List list2 = new List("id2", "volleyball", List.ListType.GROUP);
-        List list3 = new List("id3", "Liste Personelle de james", List.ListType.PERSONAL);
-
-        lists.add(list1);
-        lists.add(list2);
-        lists.add(list3);
-
-         */
-
         try {
             TimeUnit.MILLISECONDS.sleep(500);
             set_spinner();
@@ -87,21 +76,21 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         });*/
 
-        /*
+
         Button btn_mode_achat = findViewById(R.id.button_mode_achat);
         btn_mode_achat.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                if(quantitiesHaveBeenChanged(products, products_modified))
-                {
+            public void onClick(View v) {
+                /*
+                if(quantitiesHaveBeenChanged(products, products_modified)) {
                     getModifiedQuantities(products, products_modified, apiRequest);
                 }
 
-                launch_page3();
+                launch_page3();*/
+                refresh_user_vue();
             }
-        });*/
+        });
     }
     /*
 
@@ -117,7 +106,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     {
         //Lors d'un choix de liste, requete GET avec le nom de liste pour choper les elements de cette liste
         reset_selected_lists(lists);
-        List list_selected = (List) parent.getItemAtPosition(position);
+        list_selected = (List) parent.getItemAtPosition(position);
         list_selected.set_is_selected(true);
 
         current_list_name = list_selected.getList_name();
@@ -126,11 +115,12 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
         Log.d("CURRENT-LIST-NAME", current_list_name);
         Log.d("CURRENT-LIST-GroupID", current_list_groupId);
 
+        /*
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("current_list_name", current_list_name);
         editor.putString("current_list_groupId", current_list_groupId);
-        editor.commit();
+        editor.commit();*/
 
         refresh_user_vue();
     }
@@ -171,7 +161,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     protected void refresh_user_vue() {
         ApiRequest apiRequest = new ApiRequest(Page2.this);
         reset_arrayLists(products, products_modified);
-        apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_name, Page2.this);
+        apiRequest.Get_Shopping_Lists_items(products, products_modified, list_selected, Page2.this);
     }
 
     /**
