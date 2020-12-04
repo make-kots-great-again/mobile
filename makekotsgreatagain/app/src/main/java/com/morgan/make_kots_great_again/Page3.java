@@ -108,18 +108,15 @@ public class Page3 extends AppCompatActivity {
         return true;
     }
 
-    public void wipeList()
-    {
+    public void wipeList() {
         ApiRequest apiRequest = new ApiRequest(Page3.this);
 
-        for(int i=0; i<products.size(); i++)
-        {
-            apiRequest.deleteProductRequest(Page3.this, products.get(i).getProduct_uid());
+        for(int i=0; i<products.size(); i++) {
+            apiRequest.deleteProductRequest(Page3.this, products.get(i));
         }
     }
 
-    public void refreshView()
-    {
+    public void refreshView() {
         ApiRequest apiRequest = new ApiRequest(Page3.this);
         products.clear();
         apiRequest.Get_items_page3(products, current_list_selected, Page3.this);

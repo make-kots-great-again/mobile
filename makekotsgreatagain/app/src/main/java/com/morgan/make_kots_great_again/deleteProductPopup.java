@@ -53,7 +53,7 @@ public class deleteProductPopup extends Dialog
             @Override
             public void onClick(View v) {
                 //Make an API request to delete the product and leave the popup
-                apiRequest.deleteProductRequest(activity, current_product.getProduct_uid());
+                apiRequest.deleteProductRequest(activity, current_product);
                 dismiss();
             }
         });

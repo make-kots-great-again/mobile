@@ -17,8 +17,12 @@ public class Product {
         this.product_name = name;
         this.product_brand = brand;
 
-        if (owner.equals("group")) { owner.toUpperCase();this.product_owner = owner; }
-        else { this.product_owner = owner; }
+        if (owner.contains("group")) {
+            this.product_owner = owner.toUpperCase();
+        }
+        else {
+            this.product_owner = owner;
+        }
 
         this.product_quantity = quantity;
         this.product_uid = uid;
@@ -81,5 +85,12 @@ public class Product {
     @Override
     public int hashCode() {
         return Objects.hash(product_name, product_brand, product_owner, product_quantity, product_uid, product_note);
+    }
+
+    public boolean can_modify_product_quantity (){
+        if (this.product_owner.equals("GROUP") || this.product_owner.equals("Me")){
+            return true;
+        }
+        return false;
     }
 }

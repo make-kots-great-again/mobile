@@ -84,41 +84,45 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Integer.parseInt(quantity.getText().toString()) == 1) {
-                    deleteProductPopup popup = new deleteProductPopup(activity, products.get(position));
-
-                    popup.setOnDismissListener(new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            ApiRequest apiRequest = new ApiRequest(activity);
-                            Page2 page2 = new Page2();
-
-                            products.clear();
-                            apiRequest.Get_Shopping_Lists_items(products, products_modified, currently_selected_list, activity);
-                        }
-                    });
-
-                    popup.show();
+                if (!products.get(position).can_modify_product_quantity()){
+                    deleteBtn.setClickable(false);
                 }
+                else {
+                    if (Integer.parseInt(quantity.getText().toString()) == 1) {
+                        deleteProductPopup popup = new deleteProductPopup(activity, products.get(position));
 
-                else if (remove_one((String) quantity.getText()) != "error")
-                {
-                    quantity.setText(remove_one((String) quantity.getText()));
-                    products_modified.get(position).reduce_quantity();
+                        popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                ApiRequest apiRequest = new ApiRequest(activity);
+                                Page2 page2 = new Page2();
+
+                                products.clear();
+                                apiRequest.Get_Shopping_Lists_items(products, products_modified, currently_selected_list, activity);
+                            }
+                        });
+                        popup.show();
+                    }
+
+                    else if (remove_one((String) quantity.getText()) != "error") {
+                        quantity.setText(remove_one((String) quantity.getText()));
+                        products_modified.get(position).reduce_quantity();
+                    }
                 }
             }
         });
 
-        addBtn.setOnClickListener(new View.OnClickListener()
-        {
+        addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (add_one((String) quantity.getText()) != "error")
-                {
-                    quantity.setText(add_one((String) quantity.getText()));
-                    products_modified.get(position).add_quantity();
+            public void onClick(View v) {
+                if (!products.get(position).can_modify_product_quantity()){
+                    addBtn.setClickable(false);
+                }
+                else {
+                    if (add_one((String) quantity.getText()) != "error") {
+                        quantity.setText(add_one((String) quantity.getText()));
+                        products_modified.get(position).add_quantity();
+                    }
                 }
             }
         });

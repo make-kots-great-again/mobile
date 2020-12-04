@@ -90,13 +90,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
             }
         });
     }
-    /*
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        refresh_user_vue();
-    }*/
 
     // Dropdown menu with list "onChange functions"
     @Override
@@ -195,7 +188,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
     public void getModifiedQuantities(final ArrayList<Product> products, final ArrayList<Product> products_modified, ApiRequest apiRequest) {
         for (int i = 0; i<products.size(); i++) {
             if(!products.get(i).equals(products_modified.get(i))) {
-                apiRequest.updateProductRequest(Page2.this, products.get(i).getProduct_uid(), products_modified.get(i).getProduct_quantity());
+                apiRequest.updateProductRequest(Page2.this, products.get(i), products_modified.get(i).getProduct_quantity());
             }
         }
     }

@@ -46,6 +46,7 @@ public class ApiRequest {
     String products_pattern_url = "https://kotsapp.herokuapp.com/server/api/products/"; // GET + pattern
     String add_product_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/"; // POST + groupID
     String delete_product_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/"; // POST + uidProduct
+    String update_product_quantity_url = "https://kotsapp.herokuapp.com/server/api/shoppingList/updateQuantity/"; // POST
     Activity activity;
 
     /**
@@ -238,14 +239,12 @@ public class ApiRequest {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("GET2", "Error");
+                Log.d("Vers-Mode-Achat", "Error");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
+            public void onResponse(Call call, Response response) throws IOException {
                 String responseBody = response.body().string();
-                Log.d("GET2", "Ok");
                 try {
                     JSONObject Jobject = new JSONObject(responseBody);
                     JSONObject Jobject2 = Jobject.getJSONObject("shoppingList");
@@ -324,20 +323,20 @@ public class ApiRequest {
      *
      * @param activity
      * @param requestBody
-     * @param current_group_id
+     * @param List - The current_list Object
      */
-    public void addProductToList(Activity activity, JSONObject requestBody, List list) {
+    public void addProductToList(Activity activity, JSONObject requestBody, List current_list) {
 
         JSONObject json = requestBody;
 
         OkHttpClient client = new OkHttpClient();
 
-        Log.d("ListID", list.getList_id());
+        Log.d("ListID", current_list.getList_id());
 
 
         Request request = new Request.Builder()
                 .header("Authorization", token)
-                .url(add_product_url + list.getList_id())
+                .url(add_product_url + current_list.getList_id())
                 .post(RequestBody.create(MediaType.parse("application/json"), String.valueOf(json)))
                 .build();
 
@@ -375,24 +374,23 @@ public class ApiRequest {
      * The Unique ID of the product allows to know in which shoppingList it's located
      *
      * @param activity : activity calling the popup
-     * @param uidProduct : Unique ID of the product that we want to delete
+     * @param product_to_delete : The current Product object that we want to delete
      */
-    public void deleteProductRequest(final Activity activity, String uidProduct)
-    {
-        String url = shopping_list_url + "removeProduct/" + uidProduct;
+    public void deleteProductRequest(Activity activity, Product product_to_delete) {
 
         Request request = new Request.Builder()
                 .header("Authorization", token)
-                .url(url)
+                .url(delete_product_url + product_to_delete.getProduct_uid())
                 .delete()
                 .build();
 
         OkHttpClient client = new OkHttpClient();
 
-        client.newCall(request).enqueue(new Callback()
-        {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) { }
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("DeleteProduct", "Product deletion ERROR !");
+            }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -419,68 +417,52 @@ public class ApiRequest {
     }
 
     /**
-     *  Send an API Request which update the quantity of to product specified in parameter
-     *
-     * @param uidProduct
+     * Send an API Request which update the quantity of to product specified in parameter
+     * @param activity
+     * @param current_product
+     * @param new_Quantity
      */
-    public void updateProductRequest(Activity activity, String uidProduct, int new_Quantity) {
-
-        String url = shopping_list_url + "updateQuantity/" + uidProduct;
+    public void updateProductRequest(Activity activity, Product current_product, int new_Quantity) {
 
         JSONObject body = new JSONObject();
-        try
-        {
+        try {
             body.put("quantity", new_Quantity);
         }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
+        catch (JSONException e) { e.printStackTrace(); }
 
         Request request = new Request.Builder().header("Authorization", token)
-                .url(url)
+                .url(update_product_quantity_url + current_product.getProduct_uid())
                 .patch(RequestBody.create(MediaType.parse("application/json"), String.valueOf(body)))
                 .build();
 
         OkHttpClient client = new OkHttpClient();
 
-        client.newCall(request).enqueue(new Callback()
-        {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e)
-            {}
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.d("Update-Product", "Product Quantity FAILED !");
+            }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException
-            {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseBody = response.body().string();
 
                 final JSONObject Jobject;
 
-                try
-                {
+                try {
                     Jobject = new JSONObject(responseBody);
 
-                    activity.runOnUiThread(new Runnable()
-                    {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
-                        public void run()
-                        {
-                            try
-                            {
+                        public void run() {
+                            try {
                                 Toast.makeText(activity, Jobject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
+                            catch (JSONException e) { e.printStackTrace(); }
                         }
                     });
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
+                catch (JSONException e) { e.printStackTrace(); }
             }
         });
     }
