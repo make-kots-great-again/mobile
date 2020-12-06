@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -37,7 +38,8 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
-        Collections.sort(products, Comparator.comparing(Product::getProduct_owner));
+        //Collections.sort(products, Comparator.comparing(Product::getProduct_owner));
+        Collections.sort(products, Product::compareTo);
     }
 
     @Override

@@ -13,7 +13,7 @@
         android:layout_marginStart="2dp"
         android:clickable="false"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="315dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/product_name"

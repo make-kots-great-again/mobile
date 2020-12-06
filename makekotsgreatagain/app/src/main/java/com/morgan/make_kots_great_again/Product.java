@@ -2,7 +2,7 @@ package com.morgan.make_kots_great_again;
 
 import java.util.Objects;
 
-public class Product {
+public class Product implements Comparable<Product> {
 
     private int product_code;
     private String product_name;
@@ -92,5 +92,10 @@ public class Product {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        return product_owner.compareTo(o.getProduct_owner());
     }
 }
