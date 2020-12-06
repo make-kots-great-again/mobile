@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +13,20 @@ import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.ArrayList;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     private static Activity activity;
-    private String current_list_selected;
+    private String current_list_name;
     private ArrayList<Product> products =  new ArrayList<Product>();
     private ArrayList<Product> products_modified = new ArrayList<Product>();
 
-    public MyCustomAdapter(ArrayList<Product> products, ArrayList<Product> products_modified, Activity activity) {
+    public MyCustomAdapter(String name, ArrayList<Product> products, ArrayList<Product> products_modified, Activity activity) {
+        this.current_list_name = name;
         this.products = products;
         this.products_modified = products_modified;
         this.activity = activity;
-        SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
-        current_list_selected = pref.getString("list", null);
     }
 
     @Override
@@ -60,70 +55,70 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         TextView listItemText = view.findViewById(R.id.list_item_string);
-        listItemText.setText(cutLongText(products.get(position).product_name));
+        listItemText.setText(cutLongText(products.get(position).getProduct_name()));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.list_item_owner_string);
-        String current_text = products.get(position).product_owner;
+        String current_text = products.get(position).getProduct_owner();
 
         listItemOwnerText.setText(current_text);
-        if (current_text.equals("GROUP")){
+        if (current_text.equals("GROUPE")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
         }
-        else if (current_text.equals("Me")){
+        else if (current_text.equals("Moi")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));
         }
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.quantity);
-        quantity.setText(Integer.toString(products.get(position).product_quantity));
+        quantity.setText(Integer.toString(products.get(position).getProduct_quantity()));
 
         //Image Buttons (Moins et Plus)
         ImageButton deleteBtn = view.findViewById(R.id.delete_btn);
         ImageButton addBtn = view.findViewById(R.id.add_btn);
 
-        deleteBtn.setOnClickListener(new View.OnClickListener()
-        {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (Integer.parseInt(quantity.getText().toString()) == 1)
-                {
-                    deleteProductPopup popup = new deleteProductPopup(activity, products.get(position).product_uid);
-
-                    popup.setOnDismissListener(new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            ApiRequest apiRequest = new ApiRequest(activity);
-                            Page2 page2 = new Page2();
-
-                            products.clear();
-                            apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_selected, activity);
-                        }
-                    });
-
-                    popup.show();
+            public void onClick(View v) {
+                if (!products.get(position).can_modify_product_quantity()){
+                    deleteBtn.setClickable(false);
                 }
+                else {
+                    if (Integer.parseInt(quantity.getText().toString()) == 1) {
+                        deleteProductPopup popup = new deleteProductPopup(activity, products.get(position));
 
-                else if (remove_one((String) quantity.getText()) != "error")
-                {
-                    quantity.setText(remove_one((String) quantity.getText()));
-                    products_modified.get(position).reduce_quantity();
+                        popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                ApiRequest apiRequest = new ApiRequest(activity);
+                                Page2 page2 = new Page2();
+
+                                products.clear();
+                                apiRequest.Get_Shopping_Lists_items(products, products_modified, current_list_name, activity);
+                            }
+                        });
+                        popup.show();
+                    }
+
+                    else if (remove_one((String) quantity.getText()) != "error") {
+                        quantity.setText(remove_one((String) quantity.getText()));
+                        products_modified.get(position).reduce_quantity();
+                    }
                 }
             }
         });
 
-        addBtn.setOnClickListener(new View.OnClickListener()
-        {
+        addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (add_one((String) quantity.getText()) != "error")
-                {
-                    quantity.setText(add_one((String) quantity.getText()));
-                    products_modified.get(position).add_quantity();
+            public void onClick(View v) {
+                if (!products.get(position).can_modify_product_quantity()){
+                    addBtn.setClickable(false);
+                }
+                else {
+                    if (add_one((String) quantity.getText()) != "error") {
+                        quantity.setText(add_one((String) quantity.getText()));
+                        products_modified.get(position).add_quantity();
+                    }
                 }
             }
         });

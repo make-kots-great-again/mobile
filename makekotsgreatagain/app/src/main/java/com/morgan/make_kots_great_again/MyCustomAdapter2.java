@@ -3,18 +3,14 @@ package com.morgan.make_kots_great_again;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -24,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
@@ -37,7 +32,8 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
         this.activity = activity;
         SharedPreferences pref = activity.getSharedPreferences("MyPref", 0);
         current_list_selected = pref.getString("list", null);
-        Collections.sort(products, Comparator.comparing(Product::getProduct_owner));
+        //Collections.sort(products, Comparator.comparing(Product::getProduct_owner));
+        Collections.sort(products, Product::compareTo);
     }
 
     @Override
@@ -69,27 +65,27 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
 
         //Product NAME
         final TextView listItemText = view.findViewById(R.id.product_name);
-        listItemText.setText(cutLongText(products.get(position).product_name));
+        listItemText.setText(cutLongText(products.get(position).getProduct_name()));
 
         //Product BRAND
         final TextView brand = view.findViewById(R.id.product_brand);
-        brand.setText(cutLongText(products.get(position).product_brand));
+        brand.setText(cutLongText(products.get(position).getProduct_brand()));
 
         //Product OWNER
         TextView listItemOwnerText = view.findViewById(R.id.product_owner);
-        String current_text = products.get(position).product_owner;
+        String current_text = products.get(position).getProduct_owner();
 
         listItemOwnerText.setText(current_text);
-        if (current_text.equals("GROUP")){
+        if (current_text.equals("GROUPE")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
         }
-        else if (current_text.equals("Me")){
+        else if (current_text.equals("Moi")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));
         }
 
         //Product QUANTITY
         final TextView quantity = view.findViewById(R.id.product_quantity);
-        quantity.setText(Integer.toString(products.get(position).product_quantity));
+        quantity.setText(Integer.toString(products.get(position).getProduct_quantity()));
 
         //Constraint layout
         final ConstraintLayout constraintLayout = view.findViewById(R.id.constraint_layout);
@@ -105,7 +101,7 @@ public class MyCustomAdapter2 extends BaseAdapter implements ListAdapter {
                     listItemText.setPaintFlags(listItemText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     brand.setPaintFlags(brand.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
-                String snackbar_text = products.get(position).product_note;
+                String snackbar_text = products.get(position).getProduct_note();
                 if (!snackbar_text.equals("null")){
                     Snackbar snackbar = Snackbar.make(constraintLayout, snackbar_text, Snackbar.LENGTH_SHORT);
 

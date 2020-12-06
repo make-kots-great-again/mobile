@@ -2,10 +2,8 @@ package com.morgan.make_kots_great_again;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -17,23 +15,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class addProductPopup extends Dialog {
 
@@ -46,24 +34,17 @@ public class addProductPopup extends Dialog {
     private EditText input_note;
 
     private String qty, own, search_bar_hint;
-    private String current_user_name, current_user_token, current_group_id, current_list_selected;
 
     ArrayAdapter<String> adapter;
 
+    private ArrayList<Product> products2 = new ArrayList<>();
     private ArrayList<String> products = new ArrayList<>();
     private Map<String, Integer> codes = new HashMap<>();
 
     //CONSTRUCTOR
-    public addProductPopup(final Activity activity)
-    {
+    public addProductPopup(Activity activity, List current_list) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.add_new_product_popup);
-
-        SharedPreferences pref = activity.getApplicationContext().getSharedPreferences("MyPref", 0);
-        current_user_name = pref.getString("username", null);
-        current_user_token = pref.getString("token", null);
-        current_group_id = pref.getString("group_id", null);
-        current_list_selected = pref.getString("list", null);
 
         this.qty = "Quantité :";
         this.own = "Propriétaire :";
@@ -73,7 +54,7 @@ public class addProductPopup extends Dialog {
 
         //Setup search bar ----------------------------------------------------------------------
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, products);
-        search_bar = (AutoCompleteTextView)findViewById(R.id.product_search_bar);
+        search_bar = findViewById(R.id.product_search_bar);
         search_bar.setThreshold(3);
         search_bar.setAdapter(adapter);
         search_bar.addTextChangedListener(new TextWatcher()
@@ -83,10 +64,8 @@ public class addProductPopup extends Dialog {
             {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-                if(s.length() == search_bar.getThreshold())
-                {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == search_bar.getThreshold()) {
                     apiRequest.getProductsFromPattern(products, codes, s.toString());
                     refillAdapter();
                 }
@@ -105,11 +84,12 @@ public class addProductPopup extends Dialog {
         // Setup UI zone for owner selection ---------------------------------------------------
         this.owner = findViewById(R.id.text_owner);
         this.radioGroup = findViewById(R.id.radio_group);
-        if(current_list_selected.contains("perso"))
-        {
+
+        if(current_list.is_list_personal()) {
             this.owner.setVisibility(View.INVISIBLE);
             this.radioGroup.setVisibility(View.INVISIBLE);
         }
+
         this.meRadio = findViewById(R.id.btn_owner);
         this.meRadio.setChecked(true);
         this.groupeRadio = findViewById(R.id.btn_group);
@@ -122,10 +102,10 @@ public class addProductPopup extends Dialog {
             @Override
             public void onClick(View v) {
                 if (input_note.getText().length() >= 55){
-                    Toast.makeText(activity, "⚠️ Product note is too long !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "⚠️ La note pour ce produit est trop longue !", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    apiRequest.addProductToList(activity, makeJson());
+                    apiRequest.addProductToList(activity, makeJson(), current_list);
 
                     try {
                         TimeUnit.MILLISECONDS.sleep(500);
