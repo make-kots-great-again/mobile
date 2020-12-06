@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 
@@ -66,10 +62,10 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         String current_text = products.get(position).getProduct_owner();
 
         listItemOwnerText.setText(current_text);
-        if (current_text.equals("GROUP")){
+        if (current_text.equals("GROUPE")){
             listItemOwnerText.setTextColor(Color.parseColor("#3700B3"));
         }
-        else if (current_text.equals("Me")){
+        else if (current_text.equals("Moi")){
             listItemOwnerText.setTextColor(Color.parseColor("#ff00ff"));
         }
 

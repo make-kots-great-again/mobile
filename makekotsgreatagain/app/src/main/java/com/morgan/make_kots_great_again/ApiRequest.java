@@ -1,28 +1,23 @@
 package com.morgan.make_kots_great_again;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jetbrains.annotations.NotNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +93,7 @@ public class ApiRequest {
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "⚠️ Incorrect username or password.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.login_error, Toast.LENGTH_SHORT).show();
                 username.setText("");
                 password.setText("");
             }
@@ -142,9 +137,6 @@ public class ApiRequest {
                         String group_id = object.getString("groupId");
                         String list_name = object.getString("list");
                         String list_type = object.getString("listType");
-                        Log.d("LIST-ID-MOMO", list_name);
-                        Log.d("GROUP-ID-MOMO", group_id);
-                        Log.d("LIST-TYPE-MOMO", list_type);
 
                         shopping_list_arraylist.add(new List(group_id, list_name, list_type));
 
@@ -173,9 +165,7 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("GET", "Error");
-            }
+            public void onFailure(Call call, IOException e) { }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException
@@ -199,15 +189,12 @@ public class ApiRequest {
                             String product_name = object.getString("product_name");
                             String product_brand = object.getString("product_brand");
                             String product_owner = object.getString("username");
-                            if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                            if (product_owner.equals(user)){ product_owner = "Moi"; } // US M12
                             int product_quantity = Integer.parseInt(object.getString("quantity"));
                             String product_uid = object.getString("shoppingListId");
                             String product_note = object.getString("product_note");
                             products.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
                             products_modified.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
-                        }
-                        else {
-                            Log.d("PRODUCTS", "No Products left");
                         }
                     }
                 } catch (JSONException ignored) { }
@@ -238,9 +225,7 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("Vers-Mode-Achat", "Error");
-            }
+            public void onFailure(Call call, IOException e) { }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -261,14 +246,11 @@ public class ApiRequest {
                             String product_name = object.getString("product_name");
                             String product_brand = object.getString("product_brand");
                             String product_owner = object.getString("username");
-                            if (product_owner.equals(user)){ product_owner = "Me"; } // US M12
+                            if (product_owner.equals(user)){ product_owner = "Moi"; } // US M12
                             int product_quantity = Integer.parseInt(object.getString("quantity"));
                             String product_uid = object.getString("shoppingListId");
                             String product_note = object.getString("product_note");
                             products.add(new Product(product_code, product_name, product_brand, product_owner, product_quantity, product_uid, product_note));
-                        }
-                        else {
-                            Log.d("PRODUCTS", "No Products left");
                         }
                     }
 
@@ -309,7 +291,6 @@ public class ApiRequest {
                         String product_name = object.getString("product_name");
 
                         db_products.add(product_name);
-
                         products_codes.put(product_name, product_code);
                     }
                 } catch (JSONException ignored) { }
@@ -328,11 +309,7 @@ public class ApiRequest {
     public void addProductToList(Activity activity, JSONObject requestBody, List current_list) {
 
         JSONObject json = requestBody;
-
         OkHttpClient client = new OkHttpClient();
-
-        Log.d("ListID", current_list.getList_id());
-
 
         Request request = new Request.Builder()
                 .header("Authorization", token)
@@ -342,9 +319,7 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("AddProduct", "Product ERROR !");
-            }
+            public void onFailure(Call call, IOException e) { }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -388,9 +363,7 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("DeleteProduct", "Product deletion ERROR !");
-            }
+            public void onFailure(@NotNull Call call, @NotNull IOException e) { }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
@@ -424,9 +397,6 @@ public class ApiRequest {
      */
     public void updateProductRequest(Activity activity, Product current_product, Product product_modified) {
 
-        Log.d("Product-quantity", String.valueOf(current_product.getProduct_quantity()));
-        Log.d("Modified-quantity", String.valueOf(product_modified.getProduct_quantity()));
-
         JSONObject body = new JSONObject();
         try {
             body.put("quantity", product_modified.getProduct_quantity());
@@ -442,9 +412,7 @@ public class ApiRequest {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("Update-Product", "Product Quantity FAILED !");
-            }
+            public void onFailure(@NotNull Call call, @NotNull IOException e) { }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {

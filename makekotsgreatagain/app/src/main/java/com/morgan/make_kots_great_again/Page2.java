@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -118,9 +115,6 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         current_list_name = list_selected.getList_name();
         current_list_groupId = list_selected.getList_id();
-
-        Log.d("CURRENT-LIST-NAME", current_list_name);
-        Log.d("CURRENT-LIST-GroupID", current_list_groupId);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         SharedPreferences.Editor editor = pref.edit();

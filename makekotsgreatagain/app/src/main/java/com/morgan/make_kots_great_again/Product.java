@@ -18,7 +18,7 @@ public class Product implements Comparable<Product> {
         this.product_brand = brand;
 
         if (owner.contains("group")) {
-            this.product_owner = owner.toUpperCase();
+            this.product_owner = "GROUPE";
         }
         else {
             this.product_owner = owner;
@@ -88,7 +88,7 @@ public class Product implements Comparable<Product> {
     }
 
     public boolean can_modify_product_quantity (){
-        if (this.product_owner.equals("GROUP") || this.product_owner.equals("Me")){
+        if (this.product_owner.equals("GROUPE") || this.product_owner.equals("Moi")){
             return true;
         }
         return false;
