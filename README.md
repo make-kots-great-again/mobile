@@ -49,6 +49,10 @@ Then, to execute the task :
 
 ### API Request used
 
+[API Documentation](https://make-kots-great-again.github.io/web/ "api doc")
+
+[Java class/file with all API request](https://github.com/make-kots-great-again/mobile/blob/master/makekotsgreatagain/app/src/main/java/com/morgan/make_kots_great_again/ApiRequest.java)
+
 1. ***login_post_request()***
     * Used to log in the user
     * **`https://kotsapp.herokuapp.com/server/api/login`**
