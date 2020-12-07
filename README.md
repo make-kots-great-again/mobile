@@ -49,14 +49,34 @@ Then, to execute the task :
 
 ### API Request used
 
+1. login_post_request()
+    * Used to log in the user
+    * **`https://kotsapp.herokuapp.com/server/api/login`**
 
-Request purpose | API route | java function
----------|----------|---------
- Used to log in the user | **`https://kotsapp.herokuapp.com/server/api/login`** | login_post_request
- Used to fetch the current user' shopping lists | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_Shopping_Lists()
- Used to fetch the products from the currently choosen shopping list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_Shopping_Lists_items()
- Same as above, except that it's used to build page 3 | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_items_page3()
- Used to fetch all products starting with the given 3 letters | **`https://kotsapp.herokuapp.com/server/api/products/`** | getProductsFromPattern()
- Used to **add** a specified product to the currently choosen list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/`** | addProductToList()
- Used to **remove** a specified product to the currently choosen list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/`** | deleteProductRequest()
- Used to update all products that have been modified before going to page 3 | **`https://kotsapp.herokuapp.com/server/api/shoppingList/updateQuantity/`** | updateProductRequest()
+2. Get_Shopping_Lists()
+    * Used to fetch the current user' shopping lists
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
+
+3. Get_Shopping_Lists_items()
+    * Used to fetch the products from the currently choosen shopping list
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
+
+4. Get_items_page3()
+    * Same as above, except that it's used to build page 3
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
+
+5. getProductsFromPattern()
+    * Used to fetch all products starting with the given 3 letters
+    * **`https://kotsapp.herokuapp.com/server/api/products/`**
+
+6. addProductToList()
+    * Used to **add** a specified product to the currently choosen list
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/`**
+
+7. deleteProductRequest()
+    * Used to **remove** a specified product to the currently choosen list
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/`**
+
+8. updateProductRequest()
+    * sed to update all products that have been modified before going to page 3
+    * **`https://kotsapp.herokuapp.com/server/api/shoppingList/updateQuantity/`**
