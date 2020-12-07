@@ -21,3 +21,42 @@ Link to Mocup (read only) => https://app.moqups.com/srj025RSEb/view/page/ae8fe8e
 <img src="./img/mocupFinal.png">
 
 ---
+
+### Lint
+
+We used gradle' lint to check errors and warnings in our code.
+
+In order to do that, we need to add a few lines in the "**`build.gadle`**" :
+
+```gradle
+android {
+    ...
+
+    lintOptions {
+        abortOnError false
+    }
+    ...
+}
+```
+
+Then, to execute the task :
+
+```bash
+./gradlew lint
+```
+
+---
+
+### API Request used
+
+
+Request purpose | API route | java function
+---------|----------|---------
+ Used to log in the user | **`https://kotsapp.herokuapp.com/server/api/login`** | login_post_request
+ Used to fetch the current user' shopping lists | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_Shopping_Lists()
+ Used to fetch the products from the currently choosen shopping list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_Shopping_Lists_items()
+ Same as above, except that it's used to build page 3 | **`https://kotsapp.herokuapp.com/server/api/shoppingList/`** | Get_items_page3()
+ Used to fetch all products starting with the given 3 letters | **`https://kotsapp.herokuapp.com/server/api/products/`** | getProductsFromPattern()
+ Used to **add** a specified product to the currently choosen list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/`** | addProductToList()
+ Used to **remove** a specified product to the currently choosen list | **`https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/`** | deleteProductRequest()
+ Used to update all products that have been modified before going to page 3 | **`https://kotsapp.herokuapp.com/server/api/shoppingList/updateQuantity/`** | updateProductRequest()
