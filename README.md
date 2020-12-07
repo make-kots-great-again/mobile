@@ -49,34 +49,34 @@ Then, to execute the task :
 
 ### API Request used
 
-1. login_post_request()
+1. ***login_post_request()***
     * Used to log in the user
     * **`https://kotsapp.herokuapp.com/server/api/login`**
 
-2. Get_Shopping_Lists()
+2. ***Get_Shopping_Lists()***
     * Used to fetch the current user' shopping lists
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
 
-3. Get_Shopping_Lists_items()
+3. ***Get_Shopping_Lists_items()***
     * Used to fetch the products from the currently choosen shopping list
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
 
-4. Get_items_page3()
+4. ***Get_items_page3()***
     * Same as above, except that it's used to build page 3
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/`**
 
-5. getProductsFromPattern()
+5. ***getProductsFromPattern()***
     * Used to fetch all products starting with the given 3 letters
     * **`https://kotsapp.herokuapp.com/server/api/products/`**
 
-6. addProductToList()
+6. ***addProductToList()***
     * Used to **add** a specified product to the currently choosen list
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/addProduct/`**
 
-7. deleteProductRequest()
+7. ***deleteProductRequest()***
     * Used to **remove** a specified product to the currently choosen list
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/removeProduct/`**
 
-8. updateProductRequest()
+8. ***updateProductRequest()***
     * sed to update all products that have been modified before going to page 3
     * **`https://kotsapp.herokuapp.com/server/api/shoppingList/updateQuantity/`**
