@@ -53,7 +53,7 @@ public class Page2 extends AppCompatActivity implements AdapterView.OnItemSelect
 
         ApiRequest apiRequest = new ApiRequest(Page2.this);
 
-        welcome_user.setText(Html.fromHtml("Welcome back <span style=\"color:blue\">" + apiRequest.user + "</span> !"));
+        welcome_user.setText(Html.fromHtml("Bon retour <span style=\"color:blue\">" + apiRequest.user + "</span> !"));
         apiRequest.Get_Shopping_Lists(lists); // Updates ArrayList "lists"
 
         try {
